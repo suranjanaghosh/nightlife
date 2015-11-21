@@ -5,10 +5,24 @@
 //
 // You will need to set these on the server you deploy to.
 
+var YELP_CONSUMER_KEY = '',
+    YELP_CONSUMER_SECRET = '',
+    YELP_TOKEN = '',
+    YELP_TOKEN_SECRET = '';
+
 module.exports = {
   DOMAIN:           'http://localhost:9000',
   SESSION_SECRET:   'nightlife-secret',
 
   // Control debug level for modules using visionmedia/debug
-  DEBUG: ''
+  DEBUG: '',
+
+  // Yelp API credentials
+  YELP_CONFIG: {
+    consumer_key: YELP_CONSUMER_KEY,
+    consumer_secret: YELP_CONSUMER_SECRET,
+    token: YELP_TOKEN,
+    token_secret: YELP_TOKEN_SECRET
+  }
+
 };

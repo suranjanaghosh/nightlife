@@ -12,6 +12,9 @@ function requiredProcessEnv(name) {
 
 // All configurations will extend these options
 // ============================================
+
+var config = require('../local.env.js');
+
 var all = {
   env: process.env.NODE_ENV,
 
@@ -29,7 +32,7 @@ var all = {
 
   // Secret for session, you will want to change this and make it an environment variable
   secrets: {
-    session: 'nightlife-secret'
+    session: config.SESSION_SECRET
   },
 
   // List of user roles
@@ -43,6 +46,9 @@ var all = {
       }
     }
   },
+
+  // Yelp api config
+  yelpConfig: config.YELP_CONFIG
 
 };
 

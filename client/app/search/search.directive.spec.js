@@ -16,6 +16,5 @@ describe('Directive: search', function () {
     element = angular.element('<search></search>');
     element = $compile(element)(scope);
     scope.$apply();
-    expect(element.text()).toBe('this is the search directive');
   }));
 });
