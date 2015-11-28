@@ -1,6 +1,6 @@
 "use strict";
 
-var Yelp = require('yelp').default;
+var Yelp = require('yelp');
 var should = require('should');
 var app = require('../../app');
 var request = require('supertest');
@@ -29,11 +29,9 @@ describe('Yelp api helper:', function() {
       })
   });
 */
-
   it('should submit a valid search to yelp', function() {
     yelp.search({ location: 'Waco', category_filter:'nightlife'}, function(err, data) {
-      if(err) console.log(err);
-      console.log(data);
+      if(err) throw err;
     })
 
   });

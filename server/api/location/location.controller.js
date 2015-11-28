@@ -2,22 +2,21 @@
 
 var _ = require('lodash');
 var Location = require('./location.model');
+var config = require('../../config/environment');
+var Yelp = require('yelp');
 
-// Get list of locations
+// Get list of businesses
 exports.index = function(req, res) {
-  Location.find(function (err, locations) {
-    if(err) { return handleError(res, err); }
-    return res.status(200).json(locations);
-  });
+  /* TODO Get list of businesses with visitors tonight */
 };
 
-// Get a single location
+// Get businesses for a location
 exports.show = function(req, res) {
-  Location.findById(req.params.id, function (err, location) {
-    if(err) { return handleError(res, err); }
-    if(!location) { return res.status(404).send('Not Found'); }
-    return res.json(location);
-  });
+  var yelp = new Yelp(config.yelpConfig);
+  yelp.search({ location: req.params.id, category_filter: 'nightlife' }, function(err, data) {
+    if (err) return handleError(res, err);
+    return res.status(200).json(data);
+  })
 };
 
 // Creates a new location in the DB.
