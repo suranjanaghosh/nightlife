@@ -5,9 +5,12 @@ var Location = require('./location.model');
 var config = require('../../config/environment');
 var Yelp = require('yelp');
 
-// Get list of businesses
+// Get list of locations
 exports.index = function(req, res) {
-  /* TODO Get list of businesses with visitors tonight */
+  Location.find(function (err, locations) {
+    if(err) { return handleError(res, err); }
+    return res.status(200).json(locations);
+  });
 };
 
 // Get businesses for a location
