@@ -35,8 +35,9 @@ describe('GET /api/locations', function() {
         .end(function(err, res) {
           if (err) return done(err);
           res.body.should.have.property('businesses');
-          res.body.buisinesses.forEach(function(business) {
-            business.should.have.properties('name',
+          res.body.businesses.forEach(function(business) {
+            business.should.have.properties(
+              'name',
               'is_claimed',
               'visitorsTonight',
               'visitorsAllTime'
