@@ -42,7 +42,8 @@ describe('GET /api/locations', function() {
               'visitorsTonight',
               'visitorsAllTime'
             );
-          })
+          });
+          done();
         })
     });
 

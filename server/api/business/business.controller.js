@@ -13,7 +13,7 @@ exports.index = function(req, res) {
 
 // Get a single business
 exports.show = function(req, res) {
-  Business.find({ yelpId: req.params.id }, function (err, business) {
+  Business.findOne({ yelpId: req.params.id }, function (err, business) {
     if(err) { return handleError(res, err); }
     if(!business) { return res.status(404).send('Not Found'); }
     return res.json(business);
@@ -40,6 +40,20 @@ exports.update = function(req, res) {
       return res.status(200).json(business);
     });
   });
+};
+
+// Increments visitors for a business in the DB.
+exports.increment = function(req, res) {
+  Business.findOne({ yelpId: req.params.id }, function(err, business) {
+    if (err) { return handleError(res, err); }
+    if (!business) {return res.status(404).send('Not Found'); }
+    business.visitorsTonight++;
+    business.visitorsAllTime++;
+    business.save(function(err) {
+      if (err) { return handleError(res, err); }
+      return res.status(200).json(business);
+    })
+  })
 };
 
 // Deletes a business from the DB.

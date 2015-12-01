@@ -5,11 +5,18 @@ var app = require('../../app');
 var request = require('supertest');
 var Business = require('./business.model');
 
-var business = new Business({
+var sampleBusiness = new Business({
   yelpId: 'test-business',
   visitorsTonight: 10,
-  visitorsAllTime: 989
+  visitorsAllTime: 980
 });
+
+// Removes all businesses for testing
+var removeAll = function(callback) {
+  Business.remove().exec().then(function() {
+    callback();
+  })
+};
 
 describe('GET /api/businesses', function() {
 
@@ -29,10 +36,8 @@ describe('GET /api/businesses', function() {
 
 describe('GET /api/business/:id', function() {
 
-  before(function(done) {
-    Business.remove().exec().then(function() {
-      done();
-    })
+  beforeEach(function(done) {
+    removeAll(done);
   });
 
   it('should begin with no businesses', function(done) {
@@ -43,24 +48,52 @@ describe('GET /api/business/:id', function() {
   });
 
   it('should look up a business by yelp id and return it', function(done) {
-    request(app)
-      .get('/api/businesses/test-business')
-      .expect(200)
-      .end(function(err, res) {
-        if(err) return done(err);
-        res.body.yelpId.should.be('test-business');
-        done();
-      })
+    sampleBusiness.save(function() {
+      request(app)
+        .get('/api/businesses/test-business')
+        .expect(200)
+        .end(function(err, res) {
+          if(err) return done(err);
+          res.body.yelpId.should.be.eql('test-business');
+          done();
+        })
+    });
   });
 
 });
 
 describe('POST /api/businesses/', function() {
 
-  // it('should not add a business with a duplicate yelp id', function(done) {});
+  beforeEach(function(done) {
+    removeAll(done);
+  });
+
+  after(function(done) {
+    removeAll(done);
+  });
+
+  // it('should not add a business with a duplicate yelp id', function(done) {})
+
 
 });
 
 describe('PATCH /api/businesses/', function() {
+
+  it('should add a visitor to visitorsTonight and visitorsAllTime', function(done) {
+    sampleBusiness.save(function() {
+      request(app)
+        .patch('/api/businesses/test-business')
+        .expect(200)
+        .end(function(err, res) {
+          if(err) return done(err);
+          res.body.visitorsTonight.should.eql(
+            sampleBusiness.visitorsTonight + 1);
+          res.body.visitorsAllTime.should.eql(
+            sampleBusiness.visitorsAllTime + 1
+          );
+          done();
+        })
+    })
+  })
 
 });
