@@ -28,6 +28,23 @@ exports.create = function(req, res) {
   });
 };
 
+exports.createEmpty = function(req, res) {
+  Business.find({ yelpId: req.params.id }, function(err, existingBusiness) {
+    console.log(existingBusiness);
+    if (err) { return handleError(res, err); }
+    if (existingBusiness) { return res.status(403).send('Forbidden'); }
+    var newBusiness = new Business({
+      yelpId: req.params.id,
+      visitorsTonight: 0,
+      visitorsAllTime: 0
+    });
+    newBusiness.save(function(err, createdBusiness) {
+      if (err) { return handleError(res, err); }
+      return res.status(201).json(createdBusiness);
+    })
+  });
+};
+
 // Updates an existing business in the DB.
 exports.update = function(req, res) {
   if(req.body._id) { delete req.body._id; }

@@ -5,25 +5,38 @@ var app = require('../../app');
 var request = require('supertest');
 var Business = require('./business.model');
 
-var sampleBusiness = new Business({
+var sampleBusiness = {
   yelpId: 'test-business',
   visitorsTonight: 10,
   visitorsAllTime: 980
-});
+};
+
+var saveSample = function() {
+  var sample = new Business(sampleBusiness)
+  sample.save(function(err) {
+    if (err) { throw err; }
+  })
+};
 
 // Removes all businesses for testing
-var removeAll = function() {
-  Business.remove().exec()
+var removeAll = function(callback) {
+  Business.remove().exec().then(function() {
+    callback();
+  })
 };
 
 describe('GET /api/businesses', function() {
 
-  beforeEach(function() {
-    removeAll()
+  beforeEach(function(done) {
+    Business.remove().exec().then(function() {
+      done();
+    })
   });
 
-  after(function() {
-    removeAll();
+  afterEach(function(done) {
+    Business.remove().exec().then(function() {
+      done();
+    })
   });
 
   it('should respond with JSON array', function(done) {
@@ -39,24 +52,32 @@ describe('GET /api/businesses', function() {
   });
 
   it('should have one business in the array', function(done) {
-    sampleBusiness.save(function() {
-      request(app)
-        .get('/api/businesses')
-        .expect(200)
-        .end(function(err, res) {
-          res.body.should.be.instanceof(Array);
-          res.body.length.should.eql(1);
-          done();
-        })
-    })
+    saveSample();
+    request(app)
+      .get('/api/businesses')
+      .expect(200)
+      .end(function(err, res) {
+        res.body.should.be.instanceof(Array);
+        res.body.length.should.eql(1);
+        done();
+      })
   });
+
 
 });
 
 describe('GET /api/business/:id', function() {
 
-  beforeEach(function() {
-    removeAll();
+  before(function(done) {
+    Business.remove().exec().then(function() {
+      done();
+    })
+  });
+
+  afterEach(function(done) {
+    Business.remove().exec().then(function() {
+      done();
+    })
   });
 
   it('should begin with no businesses', function(done) {
@@ -65,24 +86,21 @@ describe('GET /api/business/:id', function() {
       .end(function(err, res) {
         res.body.should.be.instanceof(Array);
         res.body.length.should.eql(0);
+        done();
       });
-    Business.find({}, function(err, businesses) {
-      businesses.should.have.length(0);
-      done();
-    })
   });
 
   it('should look up a business by yelp id and return it', function(done) {
-    sampleBusiness.save(function() {
-      request(app)
-        .get('/api/businesses/test-business')
-        .expect(200)
-        .end(function(err, res) {
-          if(err) return done(err);
-          res.body.yelpId.should.be.eql('test-business');
-          done();
-        })
-    });
+    saveSample();
+    request(app)
+      .get('/api/businesses/test-business')
+      .expect(200)
+      .end(function(err, res) {
+        if(err) return done(err);
+        res.body.yelpId.should.be.eql('test-business');
+        done();
+      })
+
   });
 
 });
@@ -91,20 +109,32 @@ describe('POST /api/businesses/', function() {
 
   // TODO: Only allow server access to this endpoint
 
-  after(function() {
-    removeAll();
+  beforeEach(function(done) {
+    Business.remove().exec().then(function() {
+      done()
+    })
+  });
+
+  beforeEach(function(done){  request(app)
+      .get('/api/businesses')
+      .end(function(err, res) {
+        console.log(res.body)
+        done()
+      })
+  });
+
+  after(function(done) {
+    Business.remove().exec().then(function() {
+      done();
+    });
   });
 
   describe('/:business', function() {
 
-    beforeEach(function() {
-      removeAll();
-    });
-
     it('should add a new, empty business to the DB', function(done) {
       request(app)
         .post('/api/businesses/test-business')
-        .expect(200)
+        .expect(201)
         .end(function(err, res) {
           if (err) { throw err; }
           done();
@@ -112,15 +142,14 @@ describe('POST /api/businesses/', function() {
     });
 
     it('should not add a business with a duplicate yelp id', function(done) {
-      sampleBusiness.save(function() {
-        request(app)
-          .post('/api/businesses/test-business')
-          .expect(403)
-          .end(function(err, res) {
-            res.statusCode.should.eql(403);
-            done();
-          });
-      })
+      saveSample();
+      request(app)
+        .post('/api/businesses/test-business')
+        .expect(403)
+        .end(function(err, res) {
+          res.statusCode.should.eql(403);
+          done();
+        });
 
     });
 
@@ -151,12 +180,14 @@ describe('POST /api/businesses/', function() {
 
 describe('PATCH /api/businesses/', function() {
 
-  beforeEach(function() {
-    removeAll();
+  beforeEach(function(done) {
+    Business.remove().exec().then(function() {
+      done();
+    });
   });
 
   it('should increment visitorsTonight and visitorsAllTime', function(done) {
-
+    saveSample();
     request(app)
       .patch('/api/businesses/test-business')
       .expect(200)
