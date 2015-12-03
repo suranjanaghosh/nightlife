@@ -2,6 +2,7 @@
 
 var _ = require('lodash');
 var Location = require('./location.model');
+var Business = require('../business/business.model');
 var config = require('../../config/environment');
 var Yelp = require('yelp');
 
@@ -13,12 +14,30 @@ exports.index = function(req, res) {
   });
 };
 
-// Get businesses for a location
+// Get businesses for a location, add properties to them from businesses endpoint if
+// they have been visited before or placeholder properties otherwise. Then return the
+// modified object including businesses.
 exports.show = function(req, res) {
   var yelp = new Yelp(config.yelpConfig);
-  yelp.search({ location: req.params.id, category_filter: 'nightlife' }, function(err, data) {
-    if (err) return handleError(res, err);
-    return res.status(200).json(data);
+  yelp.search({ location: req.params.id, category_filter: 'nightlife' }, function(err, yelpResults) {
+    if (err) { return res.status(err.statusCode).json(err.data); }
+    yelpResults.businesses.map(function(business) {
+      Business.findOne({ yelpId: business.id }, function(err, dbResult) {
+        if (err) { return handleError(res, err); }
+        if (dbResult) {
+          business.visitorData = dbResult;
+        }
+        else {
+          business.visitorData = {
+            yelpId: req.params.id,
+            visitorsTonight: 0,
+            visitorsAllTime: 0
+          };
+        }
+      });
+      return business;
+    });
+    return res.status(200).json(yelpResults);
   })
 };
 

@@ -12,7 +12,7 @@ var sampleBusiness = {
 };
 
 var saveSample = function() {
-  var sample = new Business(sampleBusiness)
+  var sample = new Business(sampleBusiness);
   sample.save(function(err) {
     if (err) { throw err; }
   })
@@ -115,14 +115,6 @@ describe('POST /api/businesses/', function() {
     })
   });
 
-  beforeEach(function(done){  request(app)
-      .get('/api/businesses')
-      .end(function(err, res) {
-        console.log(res.body)
-        done()
-      })
-  });
-
   after(function(done) {
     Business.remove().exec().then(function() {
       done();
@@ -136,7 +128,9 @@ describe('POST /api/businesses/', function() {
         .post('/api/businesses/test-business')
         .expect(201)
         .end(function(err, res) {
-          if (err) { throw err; }
+          res.body.visitorsTonight.should.eql(0);
+          res.body.visitorsAllTime.should.eql(0);
+          res.body.should.have.properties('yelpId', '_id');
           done();
         });
     });
@@ -146,17 +140,15 @@ describe('POST /api/businesses/', function() {
       request(app)
         .post('/api/businesses/test-business')
         .expect(403)
-        .end(function(err, res) {
-          res.statusCode.should.eql(403);
+        .end(function() {
           done();
         });
-
     });
 
   });
 
   /*
-  TODO
+  TODO: add tests
 
     it('should add a new, empty or not empty, business', function() {
 

@@ -28,11 +28,11 @@ exports.create = function(req, res) {
   });
 };
 
+// Creates an new, empty business in the DB
 exports.createEmpty = function(req, res) {
   Business.find({ yelpId: req.params.id }, function(err, existingBusiness) {
-    console.log(existingBusiness);
     if (err) { return handleError(res, err); }
-    if (existingBusiness) { return res.status(403).send('Forbidden'); }
+    if (existingBusiness.hasOwnProperty('yelpId')) { return res.status(403).send('Forbidden'); }
     var newBusiness = new Business({
       yelpId: req.params.id,
       visitorsTonight: 0,
