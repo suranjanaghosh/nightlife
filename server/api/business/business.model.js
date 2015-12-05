@@ -5,8 +5,8 @@ var mongoose = require('mongoose'),
 
 var BusinessSchema = new Schema({
   yelpId: String,
-  visitorsTonight: Number,
-  visitorsAllTime: Number
+  visitorsTonight: { type: Number, default: 0 },
+  visitorsAllTime: { type: Number, default: 0 }
 });
 
 module.exports = mongoose.model('Business', BusinessSchema);

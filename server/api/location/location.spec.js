@@ -4,6 +4,7 @@ var should = require('should');
 var app = require('../../app');
 var request = require('supertest');
 var config = require('../../config/environment');
+var Business = require('../business/business.model');
 
 describe('GET /api/locations', function() {
 
@@ -40,16 +41,21 @@ describe('GET /api/locations', function() {
           if (err) return done(err);
           res.body.should.have.property('businesses');
           res.body.businesses.forEach(function(business) {
-            business.should.have.property('visitorData');
-            /*business.should.have.properties(
+            business.should.have.properties(
               'name',
               'is_claimed',
-              'visitorsTonight',
-              'visitorsAllTime'
-            );*/
+              'visitorData'
+            );
+            business.visitorData.should.have.properties('visitorsTonight')
           });
           done();
         })
+    });
+
+    it('should receive correct information about each business', function(done) {
+      Business.remove().exec().then(function() {
+
+      })
     });
 
     // TODO Create seed data for business endpoint

@@ -21,24 +21,23 @@ exports.show = function(req, res) {
   var yelp = new Yelp(config.yelpConfig);
   yelp.search({ location: req.params.id, category_filter: 'nightlife' }, function(err, yelpResults) {
     if (err) { return res.status(err.statusCode).json(err.data); }
-    yelpResults.businesses.map(function(business) {
+    yelpResults.businesses.forEach(function(business, i) {
       Business.findOne({ yelpId: business.id }, function(err, dbResult) {
         if (err) { return handleError(res, err); }
-        if (dbResult) {
+        if (Object.hasOwnProperty(dbResult, 'yelpId')) {
           business.visitorData = dbResult;
         }
         else {
-          business.visitorData = {
-            yelpId: req.params.id,
-            visitorsTonight: 0,
-            visitorsAllTime: 0
-          };
+          var defaultData = new Business({yelpId: business.id});
+          delete defaultData._id;
+          business.visitorData = defaultData;
         }
-      });
-      return business;
+        if (i === yelpResults.businesses.length - 1) {
+          return res.status(200).json(yelpResults);
+        }
+      })
     });
-    return res.status(200).json(yelpResults);
-  })
+  });
 };
 
 // Creates a new location in the DB.
