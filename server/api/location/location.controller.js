@@ -24,7 +24,7 @@ exports.show = function(req, res) {
     yelpResults.businesses.forEach(function(business, i) {
       Business.findOne({ yelpId: business.id }, function(err, dbResult) {
         if (err) { return handleError(res, err); }
-        if (Object.hasOwnProperty(dbResult, 'yelpId')) {
+        if (dbResult) {
           business.visitorData = dbResult;
         }
         else {

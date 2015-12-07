@@ -41,7 +41,7 @@ describe('GET /api/locations', function() {
           if (err) return done(err);
           res.body.should.have.property('businesses');
           res.body.businesses.forEach(function(business) {
-            business.should.have.properties(
+           business.should.have.properties(
               'name',
               'is_claimed',
               'visitorData'
@@ -53,9 +53,49 @@ describe('GET /api/locations', function() {
     });
 
     it('should receive correct information about each business', function(done) {
-      Business.remove().exec().then(function() {
+      var sampleBus1 = new Business({
+        yelpId: 'the-dancing-bear-pub-waco',
+        visitorsTonight: 45,
+        visitorsAllTime: 2000 });
+      var sampleBus2 = new Business({
+        yelpId: 'muddle-waco',
+        visitorsTonight: 2,
+        visitorsAllTime: 30
+      });
 
-      })
+      Business.remove().exec()
+        .then(function() {
+          return sampleBus1.save()
+            .then(function(err, doc){
+              return doc;
+            });
+        })
+        .then(function() {
+          return sampleBus2.save()
+            .then(function(err, doc) {
+              return doc;
+            });
+        })
+        .then(function() {
+          request(app)
+            .get('/api/locations/Waco')
+            .expect(200)
+            .end(function(err, res) {
+              if (err) { throw err; }
+              res.body.businesses.forEach(function(business) {
+                if (business.id === sampleBus1.yelpId) {
+                  business.visitorData.visitorsTonight.should.eql(sampleBus1.visitorsTonight);
+                  business.visitorData.visitorsAllTime.should.eql(sampleBus1.visitorsAllTime);
+
+                }
+                if (business.id === sampleBus2.yelpId) {
+                  business.visitorData.visitorsTonight.should.eql(sampleBus2.visitorsTonight);
+                  business.visitorData.visitorsAllTime.should.eql(sampleBus2.visitorsAllTime);
+                }
+              });
+              done();
+            })
+        })
     });
 
     // TODO Create seed data for business endpoint
