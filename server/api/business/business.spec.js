@@ -105,7 +105,7 @@ describe('GET /api/business/:id', function() {
 
 });
 
-describe('POST /api/businesses/', function() {
+describe('POST /api/businesses', function() {
 
   // TODO: Only allow server access to this endpoint
 
@@ -140,19 +140,38 @@ describe('POST /api/businesses/', function() {
       request(app)
         .post('/api/businesses/test-business')
         .expect(403)
-        .end(function() {
+        .end(function(err, res) {
           done();
         });
     });
 
   });
 
+  describe('/', function() {
+
+    it('should add a new, empty or not empty, business', function(done)  {
+      var id = 'test-business';
+      request(app)
+        .post('/api/businesses')
+        .send({
+          yelpId: id
+        })
+        .expect(201)
+        .end(function(err, res) {
+          var testDoc = new Business({ yelpId: id });
+          for (var key in testDoc) {
+            console.log(testDoc[key])
+            if (testDoc.hasOwnProperty(key) && key !== '_id') {
+
+            }
+          }
+          done()
+        })
+    });
+
+
   /*
   TODO: add tests
-
-    it('should add a new, empty or not empty, business', function() {
-
-    });
 
     it('should not add business if user role is not admin', function() {
 
@@ -164,9 +183,9 @@ describe('POST /api/businesses/', function() {
 
     it('should overwrite existing businesses, function() {
 
-    });
-  })
-  */
+    });*/
+
+  });
 
 });
 
