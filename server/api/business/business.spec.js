@@ -13,15 +13,8 @@ var sampleBusiness = {
 
 var saveSample = function() {
   var sample = new Business(sampleBusiness);
-  sample.save(function(err) {
+  return sample.save(function(err) {
     if (err) { throw err; }
-  })
-};
-
-// Removes all businesses for testing
-var removeAll = function(callback) {
-  Business.remove().exec().then(function() {
-    callback();
   })
 };
 
@@ -52,15 +45,17 @@ describe('GET /api/businesses', function() {
   });
 
   it('should have one business in the array', function(done) {
-    saveSample();
-    request(app)
-      .get('/api/businesses')
-      .expect(200)
-      .end(function(err, res) {
-        res.body.should.be.instanceof(Array);
-        res.body.length.should.eql(1);
-        done();
-      })
+    saveSample()
+      .then(function() {
+        request(app)
+          .get('/api/businesses')
+          .expect(200)
+          .end(function(err, res) {
+            res.body.should.be.instanceof(Array);
+            res.body.length.should.eql(1);
+            done();
+          })
+      });
   });
 
 
@@ -91,16 +86,17 @@ describe('GET /api/business/:id', function() {
   });
 
   it('should look up a business by yelp id and return it', function(done) {
-    saveSample();
-    request(app)
-      .get('/api/businesses/test-business')
-      .expect(200)
-      .end(function(err, res) {
-        if(err) return done(err);
-        res.body.yelpId.should.be.eql('test-business');
-        done();
-      })
-
+    saveSample()
+      .then(function() {
+        request(app)
+          .get('/api/businesses/test-business')
+          .expect(200)
+          .end(function(err, res) {
+            if(err) return done(err);
+            res.body.yelpId.should.be.eql('test-business');
+            done();
+          })
+      });
   });
 
 });
@@ -136,12 +132,14 @@ describe('POST /api/businesses', function() {
     });
 
     it('should not add a business with a duplicate yelp id', function(done) {
-      saveSample();
-      request(app)
-        .post('/api/businesses/test-business')
-        .expect(403)
-        .end(function(err, res) {
-          done();
+      saveSample()
+        .then(function() {
+          request(app)
+            .post('/api/businesses/test-business')
+            .expect(403)
+            .end(function() {
+              done();
+            });
         });
     });
 
@@ -149,7 +147,7 @@ describe('POST /api/businesses', function() {
 
   describe('/', function() {
 
-    it('should add a new, empty or not empty, business', function(done)  {
+    it('should add a new, empty business', function(done)  {
       var id = 'test-business';
       request(app)
         .post('/api/businesses')
@@ -157,15 +155,43 @@ describe('POST /api/businesses', function() {
           yelpId: id
         })
         .expect(201)
+        .expect('Content-Type', /json/)
         .end(function(err, res) {
-          var testDoc = new Business({ yelpId: id });
+          // Create a sample business from the model
+          var testDoc = (new Business({ yelpId: id })).toJSON();
+          // Check that each key in the sample document has a corresponding key in the response body
           for (var key in testDoc) {
-            console.log(testDoc[key])
-            if (testDoc.hasOwnProperty(key) && key !== '_id') {
-
+            if (testDoc.hasOwnProperty(key)) {
+              //noinspection BadExpressionStatementJS
+              res.body[key].should.exist;
             }
           }
           done()
+        })
+    });
+
+    it('should add a new, not empty business', function(done) {
+      var testBody = {
+        yelpId: 'test-business',
+        visitorsTonight: 10,
+        visitorsAllTime: 20
+      };
+      request(app)
+        .post('/api/businesses')
+        .send(testBody)
+        .expect(201)
+        .expect('Content-Type', /json/)
+        .end(function(err, res) {
+          // Lookup the newly created document
+          Business.findOne({ yelpId: 'test-business'} )
+            .then(function(business) {
+              for (var key in business.toJSON()) {
+                if (business.hasOwnProperty(key)) {
+                  res.body[key].should.eql(business[key]);
+                }
+              }
+            });
+          done();
         })
     });
 
@@ -198,19 +224,21 @@ describe('PATCH /api/businesses/', function() {
   });
 
   it('should increment visitorsTonight and visitorsAllTime', function(done) {
-    saveSample();
-    request(app)
-      .patch('/api/businesses/test-business')
-      .expect(200)
-      .end(function(err, res) {
-        if(err) return done(err);
-        res.body.visitorsTonight.should.eql(
-          sampleBusiness.visitorsTonight + 1);
-        res.body.visitorsAllTime.should.eql(
-          sampleBusiness.visitorsAllTime + 1
-        );
-        done();
-      })
+    saveSample()
+      .then(function() {
+        request(app)
+          .patch('/api/businesses/test-business')
+          .expect(200)
+          .end(function(err, res) {
+            if(err) return done(err);
+            res.body.visitorsTonight.should.eql(
+              sampleBusiness.visitorsTonight + 1);
+            res.body.visitorsAllTime.should.eql(
+              sampleBusiness.visitorsAllTime + 1
+            );
+            done();
+          })
+      });
   })
 
 });

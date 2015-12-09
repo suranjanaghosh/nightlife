@@ -28,7 +28,9 @@ exports.show = function(req, res) {
           business.visitorData = dbResult;
         }
         else {
-          var defaultData = new Business({yelpId: business.id});
+          // Get document properties for a new business.
+          var defaultData = (new Business({yelpId: business.id})).toJSON();
+          // Don't return an _id property. This document is not in the DB
           delete defaultData._id;
           business.visitorData = defaultData;
         }
