@@ -29,7 +29,7 @@ exports.create = function(req, res) {
 };
 
 // Creates an new, empty business in the DB
-exports.createEmpty = function(req, res) {
+exports.createNew = function(req, res) {
   Business.find({ yelpId: req.params.id }, function(err, existingBusiness) {
     if (err) { return handleError(res, err); }
     if (existingBusiness.hasOwnProperty('yelpId')) { return res.status(403).send('Forbidden'); }

@@ -101,6 +101,11 @@ describe('GET /api/business/:id', function() {
 
 });
 
+// These requests require authentication
+before(function(done) {
+
+});
+
 describe('POST /api/businesses', function() {
 
   // TODO: Only allow server access to this endpoint
@@ -158,7 +163,7 @@ describe('POST /api/businesses', function() {
         .expect('Content-Type', /json/)
         .end(function(err, res) {
           // Create a sample business from the model
-          var testDoc = (new Business({ yelpId: id })).toJSON();
+          var testDoc = (new Business({ yelpId: id })).toObject();
           // Check that each key in the sample document has a corresponding key in the response body
           for (var key in testDoc) {
             if (testDoc.hasOwnProperty(key)) {
@@ -185,7 +190,7 @@ describe('POST /api/businesses', function() {
           // Lookup the newly created document
           Business.findOne({ yelpId: 'test-business'} )
             .then(function(business) {
-              for (var key in business.toJSON()) {
+              for (var key in business.toObject()) {
                 if (business.hasOwnProperty(key)) {
                   res.body[key].should.eql(business[key]);
                 }
@@ -223,11 +228,16 @@ describe('PATCH /api/businesses/', function() {
     });
   });
 
-  it('should increment visitorsTonight and visitorsAllTime', function(done) {
+  it('should add a visitor and increment visitorsTonight and visitorsAllTime', function(done) {
     saveSample()
       .then(function() {
         request(app)
           .patch('/api/businesses/test-business')
+          .send({
+            op: 'addVisitor',
+            path: '/api/businesses/test-business',
+            value: 'test-user'
+          })
           .expect(200)
           .end(function(err, res) {
             if(err) return done(err);
@@ -239,6 +249,35 @@ describe('PATCH /api/businesses/', function() {
             done();
           })
       });
-  })
+  });
+
+  it('should not add a visitor if the visitor has already RSVPd', function(done) {
+
+  });
+
+  it('should remove a visitor and decrement visitorsTonight and visitorsAllTime', function(done) {
+
+  });
+
+  it('should not remove a visitor who has not RSVPd', function(done) {
+
+  });
+
+
+});
+
+describe('DELETE /businesses/', function() {
+
+  before(function(done) {
+
+  });
+
+  it('should remove a business from the DB if the user is an admin', function(done) {
+
+  });
+
+  it('should not remove a business from the DB if the user is not an admin', function(done) {
+
+  });
 
 });
