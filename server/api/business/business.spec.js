@@ -5,6 +5,8 @@ var app = require('../../app');
 var request = require('supertest');
 var Business = require('./business.model');
 
+var token;
+
 var sampleBusiness = {
   yelpId: 'test-business',
   visitorsTonight: 10,
@@ -101,9 +103,22 @@ describe('GET /api/business/:id', function() {
 
 });
 
-// These requests require authentication
-before(function(done) {
 
+// These requests require authentication
+
+before(function(done) {
+  request(app)
+    .post('/auth/local')
+    .set('Content-Type', 'application/json')
+    .send({
+      email: 'test@test.com',
+      password: 'test'
+    })
+    .end(function(err, res) {
+      console.log(res.body);
+      res.body.should.have.property('token');
+      token = res.body.token;
+    })
 });
 
 describe('POST /api/businesses', function() {
@@ -202,7 +217,7 @@ describe('POST /api/businesses', function() {
 
 
   /*
-  TODO: add tests
+  TODO: add POST tests
 
     it('should not add business if user role is not admin', function() {
 
@@ -265,6 +280,9 @@ describe('PATCH /api/businesses/', function() {
 
 
 });
+
+
+// DELETE requests require admin permissions
 
 describe('DELETE /businesses/', function() {
 
