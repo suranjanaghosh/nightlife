@@ -22,5 +22,8 @@ User.find({}).remove(function() {
   }, function() {
       console.log('finished populating users');
     }
+  , function(err) {
+      console.log('failed to populate users ' + err)
+    }
   );
 });

@@ -1,5 +1,6 @@
 'use strict';
 
+//require('../../config/seed'); // seed DB
 var should = require('should');
 var app = require('../../app');
 var request = require('supertest');
@@ -104,26 +105,23 @@ describe('GET /api/business/:id', function() {
 });
 
 
-// These requests require authentication
-
+// Authenticate for POST tests
 before(function(done) {
   request(app)
-    .post('/auth/local')
+    .post('/api/users/')
     .set('Content-Type', 'application/json')
     .send({
       email: 'test@test.com',
       password: 'test'
     })
     .end(function(err, res) {
-      console.log(res.body);
       res.body.should.have.property('token');
       token = res.body.token;
+      done()
     })
 });
 
 describe('POST /api/businesses', function() {
-
-  // TODO: Only allow server access to this endpoint
 
   beforeEach(function(done) {
     Business.remove().exec().then(function() {
@@ -140,8 +138,10 @@ describe('POST /api/businesses', function() {
   describe('/:business', function() {
 
     it('should add a new, empty business to the DB', function(done) {
+      console.log(token)
       request(app)
         .post('/api/businesses/test-business')
+        .set('Authorization', 'Bearer ' + token)
         .expect(201)
         .end(function(err, res) {
           res.body.visitorsTonight.should.eql(0);
@@ -156,6 +156,7 @@ describe('POST /api/businesses', function() {
         .then(function() {
           request(app)
             .post('/api/businesses/test-business')
+            .set('Authorization', 'Bearer ' + token)
             .expect(403)
             .end(function() {
               done();
@@ -171,6 +172,7 @@ describe('POST /api/businesses', function() {
       var id = 'test-business';
       request(app)
         .post('/api/businesses')
+        .set('Authorization', 'Bearer ' + token)
         .send({
           yelpId: id
         })
@@ -198,6 +200,7 @@ describe('POST /api/businesses', function() {
       };
       request(app)
         .post('/api/businesses')
+        .set('Authorization', 'Bearer ' + token)
         .send(testBody)
         .expect(201)
         .expect('Content-Type', /json/)
@@ -248,6 +251,7 @@ describe('PATCH /api/businesses/', function() {
       .then(function() {
         request(app)
           .patch('/api/businesses/test-business')
+          .set('Authorization', 'Bearer ' + token)
           .send({
             op: 'addVisitor',
             path: '/api/businesses/test-business',
@@ -266,15 +270,16 @@ describe('PATCH /api/businesses/', function() {
       });
   });
 
-  it('should not add a visitor if the visitor has already RSVPd', function(done) {
+  /*
+  TODO it('should not add a visitor if the visitor has already RSVPd', function(done) {
 
   });
 
-  it('should remove a visitor and decrement visitorsTonight and visitorsAllTime', function(done) {
+  TODO it('should remove a visitor and decrement visitorsTonight and visitorsAllTime', function(done) {
 
   });
 
-  it('should not remove a visitor who has not RSVPd', function(done) {
+  TODO it('should not remove a visitor who has not RSVPd', function(done) {
 
   });
 
