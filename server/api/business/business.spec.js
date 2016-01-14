@@ -5,6 +5,7 @@ var should = require('should');
 var app = require('../../app');
 var request = require('supertest');
 var Business = require('./business.model');
+var User = require('../user/user.model');
 
 var token;
 
@@ -16,21 +17,22 @@ var sampleBusiness = {
 
 var saveSample = function() {
   var sample = new Business(sampleBusiness);
-  return sample.save(function(err) {
+  return sample.save(function(err, doc) {
     if (err) { throw err; }
+    return doc;
   })
 };
 
 describe('GET /api/businesses', function() {
 
   beforeEach(function(done) {
-    Business.remove().exec().then(function() {
+    Business.remove(function() {
       done();
     })
   });
 
   afterEach(function(done) {
-    Business.remove().exec().then(function() {
+    Business.remove(function() {
       done();
     })
   });
@@ -67,13 +69,13 @@ describe('GET /api/businesses', function() {
 describe('GET /api/business/:id', function() {
 
   before(function(done) {
-    Business.remove().exec().then(function() {
+    Business.remove(function() {
       done();
     })
   });
 
   afterEach(function(done) {
-    Business.remove().exec().then(function() {
+    Business.remove(function() {
       done();
     })
   });
@@ -138,7 +140,7 @@ describe('POST /api/businesses', function() {
   describe('/:business', function() {
 
     it('should add a new, empty business to the DB', function(done) {
-      console.log(token)
+      console.log('got token' + token)
       request(app)
         .post('/api/businesses/test-business')
         .set('Authorization', 'Bearer ' + token)
@@ -240,15 +242,15 @@ describe('POST /api/businesses', function() {
 
 describe('PATCH /api/businesses/', function() {
 
-  beforeEach(function(done) {
-    Business.remove().exec().then(function() {
+  beforeEach(function (done) {
+    Business.remove().exec().then(function () {
       done();
     });
   });
 
-  it('should add a visitor and increment visitorsTonight and visitorsAllTime', function(done) {
+  it('should add a visitor and increment visitorsTonight and visitorsAllTime', function (done) {
     saveSample()
-      .then(function() {
+      .then(function () {
         request(app)
           .patch('/api/businesses/test-business')
           .set('Authorization', 'Bearer ' + token)
@@ -258,8 +260,8 @@ describe('PATCH /api/businesses/', function() {
             value: 'test-user'
           })
           .expect(200)
-          .end(function(err, res) {
-            if(err) return done(err);
+          .end(function (err, res) {
+            if (err) return done(err);
             res.body.visitorsTonight.should.eql(
               sampleBusiness.visitorsTonight + 1);
             res.body.visitorsAllTime.should.eql(
@@ -269,7 +271,6 @@ describe('PATCH /api/businesses/', function() {
           })
       });
   });
-
   /*
   TODO it('should not add a visitor if the visitor has already RSVPd', function(done) {
 
@@ -282,21 +283,60 @@ describe('PATCH /api/businesses/', function() {
   TODO it('should not remove a visitor who has not RSVPd', function(done) {
 
   });
-
+  */
 
 });
 
-
-// DELETE requests require admin permissions
-
 describe('DELETE /businesses/', function() {
 
+  // DELETE requests require admin permissions
+  var adminToken;
   before(function(done) {
-
+    User.remove({ email: 'admin@admin.com' }, function(err) {
+        if (err) { throw err; }
+        var admin = new User({
+          provider: 'local',
+          role: 'admin',
+          name: 'Admin',
+          email: 'admin@admin.com',
+          password: 'admin'
+        });
+        admin.save(function(err, doc) {
+          if (err) { throw err; }
+          return doc;
+        })
+      })
+      .then(function() {
+        request(app)
+          .post('/api/users/')
+          .set('Content-Type', 'application/json')
+          .send({
+              email: 'admin1@admin.com',
+              password: 'admin'
+            })
+          .end(function(err, res) {
+            res.body.should.have.property('token');
+            adminToken = res.body.token;
+            console.log('got admin token ' + adminToken);
+            done()
+          })
+      })
   });
 
   it('should remove a business from the DB if the user is an admin', function(done) {
-
+    saveSample()
+      .then(function(err, sample) {
+        if (err) { throw err; }
+        sample.should.have.property('_id');
+        request(app)
+          .delete('/api/businesses/' + sample._id)
+          .set('Authorization', 'Bearer ' + adminToken)
+          .expect(204)
+          .end(function(err, res) {
+            if (err) { throw err; }
+            done()
+          })
+      })
   });
 
   it('should not remove a business from the DB if the user is not an admin', function(done) {
