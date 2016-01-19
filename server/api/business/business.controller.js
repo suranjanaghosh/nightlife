@@ -46,7 +46,7 @@ exports.createNew = function(req, res) {
 };
 
 // Updates an existing business in the DB.
-exports.update = function(req, res) {
+exports.revise = function(req, res) {
   if(req.body._id) { delete req.body._id; }
   Business.findById(req.params.id, function (err, business) {
     if (err) { return handleError(res, err); }
@@ -59,17 +59,40 @@ exports.update = function(req, res) {
   });
 };
 
-// Increments visitors for a business in the DB.
-exports.increment = function(req, res) {
+// Handles adding and removing RSVPs for visitors to a business.
+exports.update = function(req, res) {
   Business.findOne({ yelpId: req.params.id }, function(err, business) {
     if (err) { return handleError(res, err); }
     if (!business) { return res.status(404).send('Not Found'); }
-    business.visitorsTonight++;
-    business.visitorsAllTime++;
-    business.save(function(err) {
-      if (err) { return handleError(res, err); }
-      return res.status(200).json(business);
-    })
+    // Operations object with keys being operation and values the handler for the operation
+    var ops = {
+      addVisitor: function() {
+        if (business.visitors.indexOf(req.user._id) !== -1) {
+          return res.status(409).json({error: "User already in visitor list"})
+        }
+        business.visitors.push(req.user._id);
+        business.visitorsTonight++;
+        business.visitorsAllTime++;
+      },
+      removeVisitor: function() {
+        var index = business.visitors.indexOf(req.user._id)
+        if (index === -1) {
+          return res.status(409).json({error: "User not in visitor list"})
+        }
+        business.visitors.splice(index, 1);
+        business.visitorsTonight --;
+        business.visitorsAllTime --;
+      }
+    };
+
+    // Handle the operation
+    if (!ops.hasOwnProperty(req.body.op)) {
+      return res.status(400).send('Invalid Operation')
+    }
+    ops[req.body.op]();
+    business.save().then(function(updatedBusiness) {
+      return res.status(200).json(updatedBusiness)
+    });
   })
 };
 

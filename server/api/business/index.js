@@ -10,14 +10,14 @@ var router = express.Router();
 router.get('/', controller.index);
 router.get('/:id', controller.show);
 
-// Only admins may delete a business
+// Only admins may DELETE and PUT requests
 router.delete('/:id', auth.hasRole('admin'), controller.destroy);
+router.put('/:id', auth.hasRole('admin'), controller.revise);
 
 // Other requests require authentication
 router.all('*', auth.isAuthenticated());
 router.post('/', controller.create);
 router.post('/:id', controller.createNew);
-router.put('/:id', controller.update);
-router.patch('/:id', controller.increment);
+router.patch('/:id', controller.update);
 
 module.exports = router;
