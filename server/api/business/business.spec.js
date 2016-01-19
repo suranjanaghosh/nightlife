@@ -271,6 +271,21 @@ describe('PATCH /api/businesses/', function() {
       });
   });
 
+  it('should not add a visitor if the visitor has already RSVPd', function(done) {
+    request(app)
+      .patch('/api/businesses/test-business')
+      .set('Authorization', 'Bearer ' + token)
+      .send({
+        op: 'addVisitor',
+        path: '/api/businesses/test-business'
+      })
+      .expect(409)
+      .end(function (err) {
+        if (err) return done(err);
+        done();
+      });
+  });
+
   it('should remove a visitor and decrement visitorsTonight and visitorsAllTime', function(done) {
     request(app)
       .patch('/api/businesses/test-business')
@@ -292,18 +307,20 @@ describe('PATCH /api/businesses/', function() {
       });
   });
 
-  /*
-  TODO it('should not add a visitor if the visitor has already RSVPd', function(done) {
-
+  it('should not remove a visitor who has not RSVPd', function(done) {
+    request(app)
+      .patch('/api/businesses/test-business')
+      .set('Authorization', 'Bearer ' + token)
+      .send({
+        op: 'removeVisitor',
+        path: '/api/businesses/test-business'
+      })
+      .expect(409)
+      .end(function (err) {
+        if (err) return done(err);
+        done();
+      });
   });
-
-  TODO
-
-  TODO it('should not remove a visitor who has not RSVPd', function(done) {
-
-  });
-  */
-
 });
 
 describe('DELETE /businesses/', function() {

@@ -75,7 +75,7 @@ exports.update = function(req, res) {
         business.visitorsAllTime++;
       },
       removeVisitor: function() {
-        var index = business.visitors.indexOf(req.user._id)
+        var index = business.visitors.indexOf(req.user._id);
         if (index === -1) {
           return res.status(409).json({error: "User not in visitor list"})
         }
