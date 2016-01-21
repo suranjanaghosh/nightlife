@@ -3,9 +3,9 @@
 
 angular.module('nightlifeApp')
   .controller('MainCtrl', function ($scope, $http, socket) {
-    $scope.error = '';
+    $scope.error = 'Hello';
     $scope.messages = [];
-    $scope.searchTerm = '';
+    $scope.searchTerm = 'Where are you?';
     $scope.searchResults = {};
 
     $scope.submitSearch = function() {

@@ -1,11 +1,9 @@
 'use strict';
 
-//require('../../config/seed'); // seed DB
 var should = require('should');
 var app = require('../../app');
 var request = require('supertest');
 var Business = require('./business.model');
-var User = require('../user/user.model');
 
 var token;
 
@@ -22,6 +20,22 @@ var saveSample = function() {
     return doc;
   });
 };
+
+// Get test user authentication token
+before(function(done) {
+  request(app)
+    .post('/api/users/')
+    .set('Content-Type', 'application/json')
+    .send({
+      email: 'test@test.com',
+      password: 'test'
+    })
+    .end(function(err, res) {
+      res.body.should.have.property('token');
+      token = res.body.token;
+      done()
+    })
+});
 
 describe('GET /api/businesses', function() {
 
@@ -106,23 +120,6 @@ describe('GET /api/business/:id', function() {
 
 });
 
-
-// Authenticate for POST tests
-before(function(done) {
-  request(app)
-    .post('/api/users/')
-    .set('Content-Type', 'application/json')
-    .send({
-      email: 'test@test.com',
-      password: 'test'
-    })
-    .end(function(err, res) {
-      res.body.should.have.property('token');
-      token = res.body.token;
-      done()
-    })
-});
-
 describe('POST /api/businesses', function() {
 
   beforeEach(function(done) {
@@ -164,7 +161,6 @@ describe('POST /api/businesses', function() {
             });
         });
     });
-
   });
 
   describe('/', function() {
@@ -218,22 +214,6 @@ describe('POST /api/businesses', function() {
           done();
         })
     });
-
-
-  /*
-  TODO: add POST tests
-
-    it('should not add business if user role is not admin', function() {
-
-    });
-
-    it('should add business if user role is admin', function() {
-
-    });
-
-    it('should overwrite existing businesses, function() {
-
-    });*/
 
   });
 
