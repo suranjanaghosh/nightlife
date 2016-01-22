@@ -13,7 +13,7 @@ exports.register = function(socket) {
   Location.schema.post('remove', function (doc) {
     onRemove(socket, doc);
   });
-}
+};
 
 function onSave(socket, doc, cb) {
   socket.emit('location:save', doc);

@@ -44,6 +44,20 @@ angular.module('nightlifeApp', [
     };
   })
 
+  // Service for search results
+  .service('resultsService', function() {
+    var searchResults = {};
+
+    return {
+      getResults: function() {
+        return searchResults
+      },
+      setResults: function(results) {
+        searchResults = results;
+      }
+    };
+  })
+
   .run(function ($rootScope, $location, Auth) {
     // Redirect to login if route requires auth and you're not logged in
     $rootScope.$on('$routeChangeStart', function (event, next) {

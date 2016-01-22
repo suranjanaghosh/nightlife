@@ -1,10 +1,10 @@
 'use strict';
 
-describe('Directive: search', function () {
+describe('Directive: resultsView', function () {
 
   // load the directive's module and view
   beforeEach(module('nightlifeApp'));
-  beforeEach(module('app/search/search.html'));
+  beforeEach(module('app/resultsView/resultsView.html'));
 
   var element, scope;
 
@@ -13,8 +13,9 @@ describe('Directive: search', function () {
   }));
 
   it('should make hidden element visible', inject(function ($compile) {
-    element = angular.element('<search></search>');
+    element = angular.element('<results-viewer></results-viewer>');
     element = $compile(element)(scope);
     scope.$apply();
+    expect(element.text()).toBe('this is the resultsView directive');
   }));
 });
