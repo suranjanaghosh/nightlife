@@ -3,9 +3,8 @@
 angular.module('nightlifeApp')
 
   .controller('SearchController', function ($scope, $http, resultsService) {
-    $scope.errors = {searchError: 'test error'};
+    $scope.errors = {searchError: ''};
     $scope.searchBar = {searchTerm: ''};
-    $scope.searchResults = {};
 
     $scope.submitSearch = function() {
       var searchTerm = $scope.searchBar.searchTerm;
@@ -16,9 +15,8 @@ angular.module('nightlifeApp')
 
       $http.get('/api/locations/' + encoded)
         .then(function successCallback(res) {
-          resultsService.setResults(res.data);
           $scope.searchBar.searchTerm = '';
-          console.log($scope.searchResults)
+          resultsService.setResults(res.data);
         }, function errorCallback(res) {
           if (res.status === 404) {
             $scope.errors.searchError = 'That location was not found.';

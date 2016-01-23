@@ -12,10 +12,13 @@ describe('Directive: resultsView', function () {
     scope = $rootScope.$new();
   }));
 
+  /*
+  // Default test
   it('should make hidden element visible', inject(function ($compile) {
     element = angular.element('<results-viewer></results-viewer>');
     element = $compile(element)(scope);
     scope.$apply();
     expect(element.text()).toBe('this is the resultsView directive');
   }));
+  */
 });

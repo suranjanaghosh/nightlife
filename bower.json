@@ -18,5 +18,22 @@
   "devDependencies": {
     "angular-mocks": ">=1.2.*",
     "angular-scenario": ">=1.2.*"
-  }
+  },
+  "homepage": "https://github.com/vcooley/fcc-nightlife-app",
+  "authors": [
+    "Vince Cooley <vince.r.cooley@gmail.com>"
+  ],
+  "description": "A nightlife finding app built as part of the Free Code Camp cirriculum",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "client/bower_components",
+    "test",
+    "tests"
+  ]
 }
