@@ -2,23 +2,39 @@
 
 describe('Directive: resultsView', function () {
 
-  // load the directive's module and view
+  var $controller, $rootScope, controller,
+      resultsService, sampleBusinessData;
+
+  // load the controller's module
   beforeEach(module('nightlifeApp'));
-  beforeEach(module('app/resultsView/resultsView.html'));
 
-  var element, scope;
+  beforeEach(inject(function($injector) {
+    $rootScope = $injector.get('$rootScope');
+    $controller = $injector.get('$controller');
 
-  beforeEach(inject(function ($rootScope) {
-    scope = $rootScope.$new();
+    resultsService = $injector.get('resultsService');
+    sampleBusinessData = readJSON('client/app/mocks/sampleBusinessData.json');
+    resultsService.setResults(sampleBusinessData);
+
+    // Used to create controller instance
+    var createController = function() {
+      return $controller('ResultsController', {'$scope' : $rootScope });
+    };
+    controller = createController();
+
   }));
 
-  /*
-  // Default test
-  it('should make hidden element visible', inject(function ($compile) {
-    element = angular.element('<results-viewer></results-viewer>');
-    element = $compile(element)(scope);
-    scope.$apply();
-    expect(element.text()).toBe('this is the resultsView directive');
-  }));
-  */
+  describe('Results Controller', function() {
+    it('should initialize $scope.results to object obtained from resultsService', function() {
+      expect($rootScope.results).toBe(resultsService.getResults());
+    });
+
+    it('should update results when they change', function() {
+      sampleBusinessData = readJSON('client/app/mocks/sampleBusinessData.json');
+      sampleBusinessData.businesses[0].visitorData.visitorsTonight++;
+      resultsService.setResults(sampleBusinessData);
+      expect($rootScope.results).toEqual(resultsService.getResults());
+    });
+
+  })
 });

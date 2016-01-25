@@ -63,18 +63,12 @@ describe('GET /api/locations', function() {
         visitorsAllTime: 30
       });
 
-      Business.remove().exec()
+      Business.remove()
         .then(function() {
           return sampleBus1.save()
-            .then(function(err, doc){
-              return doc;
-            });
         })
         .then(function() {
           return sampleBus2.save()
-            .then(function(err, doc) {
-              return doc;
-            });
         })
         .then(function() {
           request(app)

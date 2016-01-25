@@ -19,7 +19,8 @@ exports.index = function(req, res) {
 // modified object including businesses.
 exports.show = function(req, res) {
   var yelp = new Yelp(config.yelpConfig);
-  yelp.search({ location: req.params.id, category_filter: 'nightlife' }, function(err, yelpResults) {
+  // Get businesses from Yelp. Sorted by highest rated.
+  yelp.search({ location: req.params.id, category_filter: 'nightlife', sort: 2 }, function(err, yelpResults) {
     if (err) { return res.status(err.statusCode).json(err.data); }
     yelpResults.businesses.forEach(function(business, i) {
       Business.findOne({ yelpId: business.id }, function(err, dbResult) {

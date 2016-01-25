@@ -21,6 +21,7 @@ module.exports = function(config) {
       'client/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
       'client/bower_components/lodash/dist/lodash.compat.js',
       'client/bower_components/angular-socket-io/socket.js',
+      'client/bower_components/karma-read-json/karma-read-json.js',
       'client/app/app.js',
       'client/app/app.coffee',
       'client/app/**/*.js',
@@ -30,13 +31,19 @@ module.exports = function(config) {
       'client/app/**/*.jade',
       'client/components/**/*.jade',
       'client/app/**/*.html',
-      'client/components/**/*.html'
+      'client/components/**/*.html',
+
+      // mock data fixture
+      {
+        pattern: 'client/app/mocks/**/*.json',
+        included: false
+      }
     ],
 
     preprocessors: {
       '**/*.jade': 'ng-jade2js',
       '**/*.html': 'html2js',
-      '**/*.coffee': 'coffee',
+      '**/*.coffee': 'coffee'
     },
 
     ngHtml2JsPreprocessor: {
@@ -46,8 +53,6 @@ module.exports = function(config) {
     ngJade2JsPreprocessor: {
       stripPrefix: 'client/'
     },
-
-    
 
     // list of files / patterns to exclude
     exclude: [],

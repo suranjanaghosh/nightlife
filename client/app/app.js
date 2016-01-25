@@ -47,7 +47,6 @@ angular.module('nightlifeApp', [
   // Service for search results
   .service('resultsService', function() {
     var searchResults = {};
-
     return {
       getResults: function() {
         return searchResults
