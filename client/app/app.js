@@ -45,16 +45,19 @@ angular.module('nightlifeApp', [
   })
 
   // Service for search results
-  .service('resultsService', function() {
-    var searchResults = {};
-    return {
-      getResults: function() {
-        return searchResults
-      },
-      setResults: function(results) {
-        searchResults = results;
-      }
+  .service('resultsService', function($rootScope) {
+    var self = this;
+    var service = {};
+    this.results = {};
+    service.getResults = function() {
+      return self.results;
     };
+    service.setResults = function(data) {
+      self.results = data;
+      $rootScope.$broadcast('results:updated', data);
+    };
+
+    return service;
   })
 
   .run(function ($rootScope, $location, Auth) {

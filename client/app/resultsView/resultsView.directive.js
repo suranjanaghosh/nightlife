@@ -4,10 +4,8 @@ angular.module('nightlifeApp')
 
   .controller('ResultsController', function($scope, resultsService) {
     $scope.results = resultsService.getResults();
-    $scope.$watch(function() {
-      return resultsService.getResults();
-    }, function(newVal) {
-      $scope.results = newVal;
+    $scope.$on('results:updated', function(){
+      $scope.results = resultsService.getResults();
     })
   })
 
