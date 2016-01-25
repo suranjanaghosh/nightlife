@@ -1,3 +1,23 @@
-<div>
-  Here are your results
+<div ng-controller="ResultsController">
+
+<!--Business list -->
+<div id="item-list">
+  <ul>
+    <li ng-repeat="business in results.businesses">
+      <a class="expand" ng-click="expand($event)">
+        <div class="right-arrow">+</div>
+        <div class="icon london"></div>
+        <h2> {{ business.name }} </h2>
+        <span> {{ business.visitorData.visitors }} </span>
+      </a>
+
+      <div class="detail">
+        <div><span> {{ business.snippet_text }} </span></div><br/>
+
+        <span class="button">Connect</span>
+      </div>
+    </li>
+  </ul>
+</div>
+
 </div>

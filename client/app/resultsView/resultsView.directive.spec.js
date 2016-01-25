@@ -24,7 +24,7 @@ describe('Directive: resultsView', function () {
 
   }));
 
-  describe('Results Controller', function() {
+  describe('ResultsController', function() {
     it('should initialize $scope.results to object obtained from resultsService', function() {
       expect($rootScope.results).toBe(resultsService.getResults());
     });

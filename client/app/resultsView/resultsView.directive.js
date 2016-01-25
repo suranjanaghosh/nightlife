@@ -2,11 +2,13 @@
 
 angular.module('nightlifeApp')
 
-  .controller('ResultsController', function($scope, resultsService) {
+  .controller('ResultsController', function($scope, $document, resultsService) {
     $scope.results = resultsService.getResults();
-    $scope.$on('results:updated', function(){
+    $scope.$on('results:updated', function () {
       $scope.results = resultsService.getResults();
-    })
+    });
+    $scope.expand = function($event) {
+    }
   })
 
   .directive('resultsView', function () {
