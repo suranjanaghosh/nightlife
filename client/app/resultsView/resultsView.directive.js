@@ -7,8 +7,7 @@ angular.module('nightlifeApp')
     $scope.$on('results:updated', function () {
       $scope.results = resultsService.getResults();
     });
-    $scope.expand = function($event) {
-    }
+
   })
 
   .directive('resultsView', function () {

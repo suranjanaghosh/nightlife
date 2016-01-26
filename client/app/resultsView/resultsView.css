@@ -21,15 +21,6 @@
   background: #efefef;
 }
 
-.button {
-  padding: 8px 12px;
-  font-size: 14px;
-  background: #ccc;
-  display: block;
-  width: 200px;
-  border-radius: 3px;
-  cursor: pointer;
-}
 
 .expand {
   display: block;
@@ -50,7 +41,7 @@ span {
 
 .detail {
   margin: 20px 0 0 0;
-  display: none;
+  display: block;
   line-height: 22px;
 }
 

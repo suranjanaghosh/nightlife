@@ -1,20 +1,24 @@
-<div ng-controller="ResultsController">
+<div>
 
 <!--Business list -->
 <div id="item-list">
   <ul>
-    <li ng-repeat="business in results.businesses">
-      <a class="expand" ng-click="expand($event)">
-        <div class="right-arrow">+</div>
+    <li ng-repeat="business in results.businesses" class="container">
+      <div class="col-xs-2">
         <div class="icon london"></div>
+        <button class="btn btn-success">Connect</button>
+      </div>
+      <div class="col-xs-9 col-xs-offset-1">
         <h2> {{ business.name }} </h2>
-        <span> {{ business.visitorData.visitors }} </span>
-      </a>
-
-      <div class="detail">
-        <div><span> {{ business.snippet_text }} </span></div><br/>
-
-        <span class="button">Connect</span>
+        <div ng-show="business.visitorData.visitors.length > 0">
+          <span ng-repeat="visitor in business.visitorData.visitors">hello{{ visitor }}</span>
+        </div>
+        <div ng-show="business.visitorData.visitors.length === 0">
+          No one has RSVP'd yet. You can start the trend!
+        </div>
+        <div class="detail">
+          <div><span> {{ business.snippet_text }} </span></div><br/>
+        </div>
       </div>
     </li>
   </ul>
