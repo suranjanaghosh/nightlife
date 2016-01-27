@@ -25,6 +25,7 @@ describe('Directive: resultsView', function () {
   }));
 
   describe('ResultsController', function() {
+
     it('should initialize $scope.results to object obtained from resultsService', function() {
       expect($rootScope.results).toBe(resultsService.getResults());
     });
@@ -34,6 +35,10 @@ describe('Directive: resultsView', function () {
       sampleBusinessData.businesses[0].visitorData.visitorsTonight++;
       resultsService.setResults(sampleBusinessData);
       expect($rootScope.results).toEqual(resultsService.getResults());
+    });
+
+    it('should render the list of visitors for each business', function() {
+
     });
 
   })

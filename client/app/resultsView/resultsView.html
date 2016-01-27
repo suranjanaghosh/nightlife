@@ -9,7 +9,7 @@
         <button class="btn btn-success">Connect</button>
       </div>
       <div class="col-xs-9 col-xs-offset-1">
-        <h2> {{ business.name }} </h2>
+        <a href="{{ business.url }}"><h2> {{ business.name }} </h2></a>
         <div ng-show="business.visitorData.visitors.length > 0">
           <span ng-repeat="visitor in business.visitorData.visitors">hello{{ visitor }}</span>
         </div>

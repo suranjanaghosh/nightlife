@@ -1,15 +1,14 @@
-<div>
+<div class="container-fluid center-block">
 
-  <form ng-submit="submitSearch()" class="form-inline center-block">
-    <div class="form-group">
+  <form ng-submit="submitSearch()" class="input-group center-block">
+    <div class="form-group col-xs-6 col-xs-offset-2 input-group-lg">
       <input class="form-control" ng-model="searchBar.searchTerm" placeholder="Where are you?">
     </div>
 
-    <div class="form-group">
-      <button class="btn btn-success">Search</button>
+    <div class="form-group col-xs-2">
+      <button class="btn btn-lg btn-success">Search</button>
     </div>
   </form>
-
   <div ng-show="errors.searchError !== ''">
     <span ng-model="errors.searchError">{{ errors.searchError }}</span>
     <span ng-click="clearError()" class="glyphicon glyphicon-remove"></span>
