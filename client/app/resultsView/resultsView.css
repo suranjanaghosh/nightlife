@@ -55,12 +55,26 @@ span {
 }
 
 .icon {
-  height: 50px;
-  width: 50px;
-  float: left;
-  margin: 0 15px 0 0;
+  height: 100px;
+  width: 100px;
+  float: right;
 }
 
-.london {
-  background: url("http://placehold.it/50x50") top left no-repeat;
+.going-button {
+  margin: 10px 0 0 0;
+  float: right;
+  width: 100px;
+}
+
+@media (max-width: 768px) {
+  #item-list {
+    float: right;
+    max-width: 100%;
+  }
+
+  .col-xs-3 {
+    padding-left: 0;
+    padding-right: 5px
+  }
+
 }

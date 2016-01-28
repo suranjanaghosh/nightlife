@@ -1,0 +1,14 @@
+#search-bar {
+  width: 70%;
+  padding-left: 15%;
+}
+
+#search-button {
+  margin-left: 15px;
+}
+
+@media (max-width: 768px) {
+  #search-bar {
+    padding-left: 0;
+  }
+}

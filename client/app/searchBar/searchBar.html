@@ -1,12 +1,12 @@
 <div class="container-fluid center-block">
 
   <form ng-submit="submitSearch()" class="input-group center-block">
-    <div class="form-group col-xs-6 col-xs-offset-2 input-group-lg">
+    <div id="search-bar" class="form-group input-group-lg">
       <input class="form-control" ng-model="searchBar.searchTerm" placeholder="Where are you?">
     </div>
 
-    <div class="form-group col-xs-2">
-      <button class="btn btn-lg btn-success">Search</button>
+    <div class="form-group pull-left">
+      <button id="search-button" class="btn btn-lg btn-success">Search</button>
     </div>
   </form>
   <div ng-show="errors.searchError !== ''">

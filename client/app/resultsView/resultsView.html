@@ -1,27 +1,24 @@
-<div>
-
 <!--Business list -->
-<div id="item-list">
+<div id="item-list" style="max-width: 95%">
   <ul>
     <li ng-repeat="business in results.businesses" class="container">
-      <div class="col-xs-2">
-        <div class="icon london"></div>
-        <button class="btn btn-success">Connect</button>
+      <div class="col-xs-3 col-sm-2">
+        <div class="icon"><img class="img-responsive img-thumbnail center-block" src="{{ business.image_url }}"></div>
+        <button class="btn btn-success going-button">I'm Going!</button>
       </div>
-      <div class="col-xs-9 col-xs-offset-1">
+      <div class="col-xs-9">
         <a href="{{ business.url }}"><h2> {{ business.name }} </h2></a>
         <div ng-show="business.visitorData.visitors.length > 0">
-          <span ng-repeat="visitor in business.visitorData.visitors">hello{{ visitor }}</span>
+          <span ng-repeat="visitor in business.visitorData.visitors">{{ visitor }}</span>
         </div>
         <div ng-show="business.visitorData.visitors.length === 0">
           No one has RSVP'd yet. You can start the trend!
         </div>
         <div class="detail">
-          <div><span> {{ business.snippet_text }} </span></div><br/>
+          <span id="snippet"> {{ business.snippet_text }} </span><br/>
         </div>
       </div>
     </li>
   </ul>
 </div>
 
-</div>
