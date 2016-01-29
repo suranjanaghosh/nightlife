@@ -24,6 +24,11 @@ describe('Directive: resultsView', function () {
 
   }));
 
+  afterEach(function() {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
   describe('ResultsController', function() {
 
     it('should initialize $scope.results to object obtained from resultsService', function() {
@@ -39,6 +44,14 @@ describe('Directive: resultsView', function () {
 
     it('should render the list of visitors for each business', function() {
 
+    });
+
+    it('should not allow unauthenticated user to RSVP', function() {
+      var businessId = sampleBusinessData.businesses[0].id;
+      $httpBackend.expectPATCH('/api/business/' + businessId)
+        .respond(403);
+      $rootScope.addVisitor(businessId);
+      $httpBackend.flush();
     });
 
   })

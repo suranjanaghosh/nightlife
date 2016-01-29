@@ -1,7 +1,7 @@
 <!--Business list -->
 <div id="item-list" style="max-width: 95%">
   <ul>
-    <li ng-repeat="business in results.businesses" class="container">
+    <li ng-repeat="business in results.businesses" class="container business">
       <div class="col-xs-3 col-sm-2">
         <div class="icon"><img class="img-responsive img-thumbnail center-block" src="{{ business.image_url }}"></div>
         <button class="btn btn-success going-button">I'm Going!</button>
@@ -9,7 +9,7 @@
       <div class="col-xs-9">
         <a href="{{ business.url }}"><h2> {{ business.name }} </h2></a>
         <div ng-show="business.visitorData.visitors.length > 0">
-          <span ng-repeat="visitor in business.visitorData.visitors">{{ visitor }}</span>
+          <span ng-repeat="visitor in business.visitorData.visitors" class="visitor">{{ visitor }}</span>
         </div>
         <div ng-show="business.visitorData.visitors.length === 0">
           No one has RSVP'd yet. You can start the trend!
