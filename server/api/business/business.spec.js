@@ -273,7 +273,6 @@ describe('PATCH /api/businesses/', function() {
       .send({
         op: 'removeVisitor',
         path: '/api/businesses/test-business'
-
       })
       .expect(200)
       .end(function (err, res) {

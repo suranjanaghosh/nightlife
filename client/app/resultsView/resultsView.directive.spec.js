@@ -2,34 +2,51 @@
 
 describe('Directive: resultsView', function () {
 
-  var $controller, $rootScope, $httpBackend, Auth, controller,
-      resultsService, sampleBusinessData;
+  var $controller, $rootScope, $httpBackend, AuthMock, controller,
+      resultsService, sampleBusinessData, scopeBusiness, user;
+
+  var specBusiness = (function() {
+    var business = {};
+
+    return {
+      getBusiness: function() {
+       return business;
+    },
+      setBusiness: function(newBusiness) {
+        business = newBusiness
+      }
+    };
+  })();
 
   // load the controller's module
   beforeEach(module('nightlifeApp'));
 
   beforeEach(inject(function($injector) {
+    // inject dependecies and mocks
     $rootScope = $injector.get('$rootScope');
     $controller = $injector.get('$controller');
     $httpBackend = $injector.get('$httpBackend');
-    Auth = $injector.get('AuthMock');
+    AuthMock = $injector.get('AuthMock');
     resultsService = $injector.get('resultsService');
-    sampleBusinessData = readJSON('client/app/mocks/sampleBusinessData.json');
+
+    // Read mock data
+    sampleBusinessData = readJSON('client/app/mocks/businessData.mock.json');
     resultsService.setResults(sampleBusinessData);
 
-    // Used to create controller instance
-    var createController = function() {
-      return $controller('ResultsController', {'$scope' : $rootScope });
-    };
-    controller = createController();
+    // Create controller instance
+    controller = (function() {
+      return $controller('ResultsController', {'$scope' : $rootScope, Auth: AuthMock});
+    })();
+
+    // Set up a default business for tests
+    scopeBusiness = $rootScope.results.businesses[0];
+    specBusiness.setBusiness(readJSON('client/app/mocks/businessData.mock.json').businesses[0]);
 
   }));
 
   afterEach(function() {
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
-    Auth.setMockUser({email: 'test@test.com'})
-    console.log(Auth.getCurrentUser())
   });
 
   describe('ResultsController', function() {
@@ -39,7 +56,6 @@ describe('Directive: resultsView', function () {
     });
 
     it('should update results when they change', function() {
-      sampleBusinessData = readJSON('client/app/mocks/sampleBusinessData.json');
       sampleBusinessData.businesses[0].visitorData.visitorsTonight++;
       resultsService.setResults(sampleBusinessData);
       expect($rootScope.results).toEqual(resultsService.getResults());
@@ -56,6 +72,27 @@ describe('Directive: resultsView', function () {
       });
 
       it('should send PATCH request with appropriate body on authenticated RSVP', function() {
+        user = getMockUser('test');
+        AuthMock.setMockUser(user);
+        expect(scopeBusiness.visitorData.visitors.indexOf(user.twitterId)).toBe(-1);
+        $httpBackend.expectPATCH('/api/businesses/' + scopeBusiness.id, {
+          op: 'addVisitor',
+          path: '/api/businesses/' + scopeBusiness.id
+        })
+          .respond(200, (function() {
+            // Update data and respond
+            var data = specBusiness.getBusiness().visitorData;
+            data.visitors.push(AuthMock.getCurrentUser().twitterId);
+            data.visitorsTonight++;
+            data.visitorsAllTime++;
+            expect(specBusiness.getBusiness()).not.toEqual(scopeBusiness);
+            return data;
+            })()
+          );
+        $rootScope.toggleVisitor(0);
+        $httpBackend.flush();
+        expect(scopeBusiness.visitorData.visitors.indexOf(user.twitterId)).not.toBe(-1)
+        expect(scopeBusiness).toEqual(specBusiness.getBusiness());
 
       });
 

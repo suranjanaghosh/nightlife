@@ -1,8 +1,7 @@
-// Just like Auth, but allows manual setting of current user
 'use strict';
 
 angular.module('nightlifeApp')
-  .factory('AuthMock', function Auth($location, $rootScope, $http, User, $cookieStore, $q) {
+  .factory('AuthMock', function AuthMock($location, $rootScope, $http, User, $cookieStore, $q) {
     var currentUser = {};
     if($cookieStore.get('token')) {
       currentUser = User.get();
@@ -10,7 +9,7 @@ angular.module('nightlifeApp')
 
     return {
 
-      // Set up a mock user
+      // Allow Mock users for testing environments
       setMockUser: function(user) {
         currentUser = user;
       },

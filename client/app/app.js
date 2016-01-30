@@ -60,6 +60,30 @@ angular.module('nightlifeApp', [
     return service;
   })
 
+  // Error handling service
+  .service('errorService', function($rootScope) {
+    var errors = {};
+
+    return {
+      // error should be error name and message should be message to be displayed to user
+      setError: function(error, message) {
+        errors[error] = message;
+        $rootScope.$broadcast('errors:updated', errors);
+      },
+      // Removes an error. param error should be error name
+      removeError: function(error) {
+        delete errors[error];
+        $rootScope.$broadcast('errors:updated', errors);
+      },
+      getError: function(error) {
+        return errors[error] || ''
+      },
+      getAllErrors: function() {
+        return errors;
+      }
+    }
+  })
+
   .run(function ($rootScope, $location, Auth) {
     // Redirect to login if route requires auth and you're not logged in
     $rootScope.$on('$routeChangeStart', function (event, next) {

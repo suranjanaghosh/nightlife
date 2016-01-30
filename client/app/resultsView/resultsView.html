@@ -1,10 +1,10 @@
 <!--Business list -->
 <div id="item-list" style="max-width: 95%">
   <ul>
-    <li ng-repeat="business in results.businesses" class="container business">
+    <li ng-repeat="business in results.businesses track by $index" class="container business">
       <div class="col-xs-3 col-sm-2">
         <div class="icon"><img class="img-responsive img-thumbnail center-block" src="{{ business.image_url }}"></div>
-        <button class="btn btn-success going-button">I'm Going!</button>
+        <button class="btn btn-success going-button" ng-click="toggleVisitor($index)">I'm Going!</button>
       </div>
       <div class="col-xs-9">
         <a href="{{ business.url }}"><h2> {{ business.name }} </h2></a>

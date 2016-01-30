@@ -2,9 +2,13 @@
 
 angular.module('nightlifeApp')
 
-  .controller('SearchController', function ($scope, $http, resultsService) {
-    $scope.errors = {searchError: ''};
+  .controller('SearchController', function ($scope, $http, resultsService, errorService) {
+
+    $scope.error = errorService.getError('searchError');
     $scope.searchBar = {searchTerm: ''};
+    $scope.$on('errors:updated', function () {
+      $scope.error = errorService.getError('searchError');
+    });
 
     $scope.submitSearch = function() {
       var searchTerm = $scope.searchBar.searchTerm;
@@ -19,17 +23,14 @@ angular.module('nightlifeApp')
           resultsService.setResults(res.data);
         }, function errorCallback(res) {
           if (res.status === 404) {
-            $scope.errors.searchError = 'That location was not found.';
+            errorService.setError('searchError', 'That location was not found.');
           }
           else {
-            $scope.errors.searchError = 'There was an error searching for that location.';
+            errorService.setError('searchError', 'There was an error searching for that location.');
           }
         });
     };
 
-    $scope.clearError = function() {
-      $scope.errors.searchError = '';
-    };
   })
 
   .directive('searchBar', function () {

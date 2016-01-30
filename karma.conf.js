@@ -23,27 +23,21 @@ module.exports = function(config) {
       'client/bower_components/angular-socket-io/socket.js',
       'client/bower_components/karma-read-json/karma-read-json.js',
       'client/app/app.js',
-      'client/app/app.coffee',
       'client/app/**/*.js',
-      'client/app/**/*.coffee',
       'client/components/**/*.js',
-      'client/components/**/*.coffee',
-      'client/app/**/*.jade',
-      'client/components/**/*.jade',
       'client/app/**/*.html',
       'client/components/**/*.html',
+      'client/app/mocks/**/*.mock.js',
 
-      // mock data fixture
+      // mock data fixtures
       {
-        pattern: 'client/app/mocks/**/*.json',
+        pattern: 'client/app/mocks/**/*.mock.json',
         included: false
       }
     ],
 
     preprocessors: {
-      '**/*.jade': 'ng-jade2js',
-      '**/*.html': 'html2js',
-      '**/*.coffee': 'coffee'
+      '**/*.html': 'html2js'
     },
 
     ngHtml2JsPreprocessor: {

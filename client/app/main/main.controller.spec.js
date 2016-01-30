@@ -25,4 +25,6 @@ describe('Controller: MainCtrl', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
+  // TODO Add error testing
+
 });
