@@ -2,7 +2,7 @@
 
 describe('Directive: resultsView', function () {
 
-  var $controller, $rootScope, controller,
+  var $controller, $rootScope, $httpBackend, Auth, controller,
       resultsService, sampleBusinessData;
 
   // load the controller's module
@@ -11,7 +11,8 @@ describe('Directive: resultsView', function () {
   beforeEach(inject(function($injector) {
     $rootScope = $injector.get('$rootScope');
     $controller = $injector.get('$controller');
-
+    $httpBackend = $injector.get('$httpBackend');
+    Auth = $injector.get('AuthMock');
     resultsService = $injector.get('resultsService');
     sampleBusinessData = readJSON('client/app/mocks/sampleBusinessData.json');
     resultsService.setResults(sampleBusinessData);
@@ -27,6 +28,8 @@ describe('Directive: resultsView', function () {
   afterEach(function() {
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
+    Auth.setMockUser({email: 'test@test.com'})
+    console.log(Auth.getCurrentUser())
   });
 
   describe('ResultsController', function() {
@@ -46,12 +49,32 @@ describe('Directive: resultsView', function () {
 
     });
 
-    it('should not allow unauthenticated user to RSVP', function() {
-      var businessId = sampleBusinessData.businesses[0].id;
-      $httpBackend.expectPATCH('/api/business/' + businessId)
-        .respond(403);
-      $rootScope.addVisitor(businessId);
-      $httpBackend.flush();
+    describe('#addVisitor', function() {
+
+      it('should redirect on unauthenticated RSVP attempt', function() {
+
+      });
+
+      it('should send PATCH request with appropriate body on authenticated RSVP', function() {
+
+      });
+
+      it('should not send PATCH request if user has already RSVPd', function() {
+
+      });
+
+    });
+
+    describe('#removeVisitor', function() {
+
+      it('should send appropriate PATCH request', function() {
+
+      });
+
+      it('should not send PATCH request if user has not RSVPd', function() {
+
+      });
+
     });
 
   })
