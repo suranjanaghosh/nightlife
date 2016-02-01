@@ -6,6 +6,9 @@
 
 var errors = require('./components/errors');
 var path = require('path');
+var session = require('express-session');
+var config = require('./config/environment');
+var passport = require('passport')
 
 module.exports = function(app) {
 
@@ -14,6 +17,10 @@ module.exports = function(app) {
   app.use('/api/locations', require('./api/location'));
   app.use('/api/users', require('./api/user'));
 
+  // Set up session object and passport
+  app.use(session({ secret: config.secrets.session, resave: false, saveUninitialized: true }));
+  app.use(passport.initialize());
+  app.use(passport.session());
   app.use('/auth', require('./auth'));
 
   // All undefined asset or api routes should return a 404

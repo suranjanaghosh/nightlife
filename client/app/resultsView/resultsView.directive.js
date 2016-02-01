@@ -16,7 +16,7 @@ angular.module('nightlifeApp')
       // Get business immutable id for assertion later
       var businessId = business.id;
       // Get bool of users RSVP status
-      var isGoing = (business.visitorData.visitors.indexOf(Auth.getCurrentUser()) !== -1);
+      var isGoing = (business.visitorData.visitors.indexOf(Auth.getCurrentUser().twitterId) !== -1);
       $http.patch('/api/businesses/' + businessId, {
           // Operation to send depends on user's status
           op: (isGoing ? 'removeVisitor': 'addVisitor'),

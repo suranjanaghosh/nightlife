@@ -48,7 +48,10 @@ var all = {
   },
 
   // Yelp api config
-  yelpConfig: config.YELP_CONFIG
+  yelpConfig: config.YELP_CONFIG,
+
+  // Twitter api config
+  twitter: config.TWITTER_CONFIG
 
 };
 

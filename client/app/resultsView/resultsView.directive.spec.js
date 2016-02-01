@@ -65,13 +65,13 @@ describe('Directive: resultsView', function () {
 
     });
 
-    describe('#addVisitor', function() {
+    describe('#toggleVisitor', function() {
 
       it('should redirect on unauthenticated RSVP attempt', function() {
 
       });
 
-      it('should send PATCH request with appropriate body on authenticated RSVP', function() {
+      it('should send PATCH request with addVisitor op on authenticated RSVP', function() {
         user = getMockUser('test');
         AuthMock.setMockUser(user);
         expect(scopeBusiness.visitorData.visitors.indexOf(user.twitterId)).toBe(-1);
@@ -91,28 +91,40 @@ describe('Directive: resultsView', function () {
           );
         $rootScope.toggleVisitor(0);
         $httpBackend.flush();
-        expect(scopeBusiness.visitorData.visitors.indexOf(user.twitterId)).not.toBe(-1)
+        expect(scopeBusiness.visitorData.visitors.indexOf(user.twitterId)).not.toBe(-1);
         expect(scopeBusiness).toEqual(specBusiness.getBusiness());
 
       });
 
-      it('should not send PATCH request if user has already RSVPd', function() {
-
+      it('should send PATCH request with removeVisitor op if user has already RSVPd', function() {
+        user = getMockUser('test');
+        AuthMock.setMockUser(user);
+        // Expect the user not to be going yet
+        expect(scopeBusiness.visitorData.visitors.indexOf(user.twitterId)).toBe(-1);
+        // Add user to the list
+        scopeBusiness.visitorData.visitors.push(user.twitterId);
+        specBusiness.getBusiness().visitorData.visitors.push(user.twitterId);
+        expect(scopeBusiness).toEqual(specBusiness.getBusiness());
+        $httpBackend.expectPATCH('/api/businesses/' + scopeBusiness.id, {
+            op: 'removeVisitor',
+            path: '/api/businesses/' + scopeBusiness.id
+          })
+          .respond(200, (function() {
+            // Update data and respond
+            var data = specBusiness.getBusiness().visitorData;
+            var index = data.visitors.indexOf(user.twitterId);
+            data.visitors.splice(index, 1);
+            data.visitorsTonight--;
+            data.visitorsAllTime--;
+            expect(specBusiness.getBusiness()).not.toEqual(scopeBusiness);
+            return data;
+          })()
+          );
+        $rootScope.toggleVisitor(0);
+        $httpBackend.flush();
+        expect(scopeBusiness.visitorData.visitors.indexOf(user.twitterId)).toBe(-1);
       });
 
     });
-
-    describe('#removeVisitor', function() {
-
-      it('should send appropriate PATCH request', function() {
-
-      });
-
-      it('should not send PATCH request if user has not RSVPd', function() {
-
-      });
-
-    });
-
   })
 });

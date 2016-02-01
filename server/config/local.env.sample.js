@@ -10,6 +10,10 @@ var YELP_CONSUMER_KEY = '',
     YELP_TOKEN = '',
     YELP_TOKEN_SECRET = '';
 
+var TWITTER_CONSUMER_KEY = '',
+    TWITTER_CONSUMER_SECRET = '',
+    TWITTER_CALLBACK = '';
+
 module.exports = {
   DOMAIN:           'http://localhost:9000',
   SESSION_SECRET:   'nightlife-secret',
