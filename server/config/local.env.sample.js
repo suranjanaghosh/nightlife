@@ -12,10 +12,10 @@ var YELP_CONSUMER_KEY = '',
 
 var TWITTER_CONSUMER_KEY = '',
     TWITTER_CONSUMER_SECRET = '',
-    TWITTER_CALLBACK = '';
+    TWITTER_CALLBACK_URL = '';
 
 module.exports = {
-  DOMAIN:           'http://localhost:9000',
+  DOMAIN:           'http://127.0.0.1:9000',
   SESSION_SECRET:   'nightlife-secret',
 
   // Control debug level for modules using visionmedia/debug
@@ -27,6 +27,12 @@ module.exports = {
     consumer_secret: YELP_CONSUMER_SECRET,
     token: YELP_TOKEN,
     token_secret: YELP_TOKEN_SECRET
+  },
+
+  TWITTER_CONFIG: {
+    consumerKey: TWITTER_CONSUMER_KEY,
+    consumerSecret: TWITTER_CONSUMER_SECRET,
+    callbackURL: TWITTER_CALLBACK_URL
   }
 
 };

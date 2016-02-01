@@ -8,7 +8,7 @@ var errors = require('./components/errors');
 var path = require('path');
 var session = require('express-session');
 var config = require('./config/environment');
-var passport = require('passport')
+var passport = require('passport');
 
 module.exports = function(app) {
 
