@@ -17,10 +17,6 @@ module.exports = function(app) {
   app.use('/api/locations', require('./api/location'));
   app.use('/api/users', require('./api/user'));
 
-  // Set up session object and passport
-  //app.use(session({ secret: config.secrets.session, resave: false, saveUninitialized: true }));
-  //app.use(passport.initialize());
-  //app.use(passport.session());
   app.use('/auth', require('./auth'));
 
   // All undefined asset or api routes should return a 404

@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('nightlifeApp')
-  .factory('Auth', function Auth($location, $rootScope, $http, User, $cookieStore, $q) {
+  .factory('Auth', function Auth($location, $rootScope, $http, User, $q, $cookies) {
     var currentUser = {};
-    if($cookieStore.get('token')) {
+    if($cookies.get('jwtToken')) {
       currentUser = User.get();
     }
 
@@ -25,7 +25,7 @@ angular.module('nightlifeApp')
           password: user.password
         }).
         success(function(data) {
-          $cookieStore.put('token', data.token);
+          $cookies.put('jwtToken', data.token);
           currentUser = User.get();
           deferred.resolve(data);
           return cb();
@@ -45,7 +45,7 @@ angular.module('nightlifeApp')
        * @param  {Function}
        */
       logout: function() {
-        $cookieStore.remove('token');
+        $cookies.remove('jwtToken');
         currentUser = {};
       },
 
@@ -61,7 +61,7 @@ angular.module('nightlifeApp')
 
         return User.save(user,
           function(data) {
-            $cookieStore.put('token', data.token);
+            $cookies.put('jwtToken', data.token);
             currentUser = User.get();
             return cb(user);
           },
@@ -140,7 +140,7 @@ angular.module('nightlifeApp')
        * Get auth token
        */
       getToken: function() {
-        return $cookieStore.get('token');
+        return $cookies.get('jwtToken');
       }
     };
   });
