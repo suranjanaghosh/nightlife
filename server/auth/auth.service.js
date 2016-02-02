@@ -1,7 +1,6 @@
 'use strict';
 
 var mongoose = require('mongoose');
-var passport = require('passport');
 var config = require('../config/environment');
 var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
@@ -21,6 +20,10 @@ function isAuthenticated() {
       if(req.query && req.query.hasOwnProperty('access_token')) {
         req.headers.authorization = 'Bearer ' + req.query.access_token;
       }
+      else if (!req.headers.authorization) {
+        req.headers.authorization = 'Bearer ' + req.cookies.jwtToken;
+      }
+      console.log(req.headers, req.cookies);
       validateJwt(req, res, next);
     })
     // Attach user to request
@@ -62,11 +65,11 @@ function signToken(id) {
 /**
  * Set token cookie directly for oAuth strategies
  */
-function setTokenCookie(req, res) {
+function setTokenCookie(req, res, next) {
   if (!req.user) return res.status(404).json({ message: 'Something went wrong, please try again.'});
   var token = signToken(req.user._id, req.user.role);
-  res.cookie('token', JSON.stringify(token));
-  res.redirect(req.cookies.next || '/');
+  res.cookie('jwtToken', token);
+  next();
 }
 
 exports.isAuthenticated = isAuthenticated;

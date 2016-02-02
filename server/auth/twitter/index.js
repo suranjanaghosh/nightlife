@@ -13,8 +13,9 @@ router
 
   .get('/callback', passport.authenticate('twitter', {
       failureRedirect: '/'
-    }), function(req, res) {
-    res.redirect('/');
+    }), auth.setTokenCookie, function(req, res) {
+    console.log(req);
+    res.redirect('/')
   });
 
 module.exports = router;

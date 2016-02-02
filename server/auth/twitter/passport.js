@@ -7,24 +7,36 @@ exports.setup = function (User, config) {
       consumerSecret: config.twitter.consumerSecret,
       callbackURL: config.twitter.callbackURL
     },
-    function(accessToken, refreshToken, profile, done) {
+    function(req, accessToken, refreshToken, profile, done) {
+
+      passport.serializeUser(function(user, done) {
+        done(null, user.id);
+      });
+
+      passport.deserializeUser(function(id, done) {
+        User.findbyId(id, function(err, user) {
+          done(err, user);
+        });
+      });
+
       User.findOne({
         'twitter.id': profile.id
       }, function(err, user) {
         if (!user) {
           user = new User({
             name: profile.displayName,
-            email: null,
             role: 'user',
             username: profile.username,
             provider: 'twitter',
-            twitter: profile
+            twitter: profile._json
           });
           user.save(function(err) {
             if (err) return done(err);
+            req.user = user
             done(err, user);
           });
         } else {
+          req.user = user;
           return done(err, user);
         }
       });
