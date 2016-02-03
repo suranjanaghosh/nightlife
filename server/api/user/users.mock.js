@@ -1,6 +1,6 @@
 'use strict';
 
-function getMockUser(username) {
+module.exports = function getMockUser(username) {
   var users = {
     "test": {
       "name": "Test User",
@@ -31,4 +31,4 @@ function getMockUser(username) {
   };
 
   return users[username];
-}
+};

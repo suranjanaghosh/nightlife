@@ -74,7 +74,7 @@ describe('Directive: resultsView', function () {
       it('should send PATCH request with addVisitor op on authenticated RSVP', function() {
         user = getMockUser('test');
         AuthMock.setMockUser(user);
-        expect(scopeBusiness.visitorData.visitors.indexOf(user.twitterId)).toBe(-1);
+        expect(scopeBusiness.visitorData.visitors.indexOf(user.username)).toBe(-1);
         $httpBackend.expectPATCH('/api/businesses/' + scopeBusiness.id, {
           op: 'addVisitor',
           path: '/api/businesses/' + scopeBusiness.id
@@ -91,7 +91,7 @@ describe('Directive: resultsView', function () {
           );
         $rootScope.toggleVisitor(0);
         $httpBackend.flush();
-        expect(scopeBusiness.visitorData.visitors.indexOf(user.twitterId)).not.toBe(-1);
+        expect(scopeBusiness.visitorData.visitors.indexOf(user.username)).not.toBe(-1);
         expect(scopeBusiness).toEqual(specBusiness.getBusiness());
 
       });
@@ -100,10 +100,10 @@ describe('Directive: resultsView', function () {
         user = getMockUser('test');
         AuthMock.setMockUser(user);
         // Expect the user not to be going yet
-        expect(scopeBusiness.visitorData.visitors.indexOf(user.twitterId)).toBe(-1);
+        expect(scopeBusiness.visitorData.visitors.indexOf(user.username)).toBe(-1);
         // Add user to the list
-        scopeBusiness.visitorData.visitors.push(user.twitterId);
-        specBusiness.getBusiness().visitorData.visitors.push(user.twitterId);
+        scopeBusiness.visitorData.visitors.push(user.username);
+        specBusiness.getBusiness().visitorData.visitors.push(user.username);
         expect(scopeBusiness).toEqual(specBusiness.getBusiness());
         $httpBackend.expectPATCH('/api/businesses/' + scopeBusiness.id, {
             op: 'removeVisitor',
@@ -112,7 +112,7 @@ describe('Directive: resultsView', function () {
           .respond(200, (function() {
             // Update data and respond
             var data = specBusiness.getBusiness().visitorData;
-            var index = data.visitors.indexOf(user.twitterId);
+            var index = data.visitors.indexOf(user.username);
             data.visitors.splice(index, 1);
             data.visitorsTonight--;
             data.visitorsAllTime--;
@@ -122,7 +122,7 @@ describe('Directive: resultsView', function () {
           );
         $rootScope.toggleVisitor(0);
         $httpBackend.flush();
-        expect(scopeBusiness.visitorData.visitors.indexOf(user.twitterId)).toBe(-1);
+        expect(scopeBusiness.visitorData.visitors.indexOf(user.username)).toBe(-1);
       });
 
     });

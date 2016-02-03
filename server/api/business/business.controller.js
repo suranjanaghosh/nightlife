@@ -67,15 +67,24 @@ exports.update = function(req, res) {
     // Operations object with keys being operation and values the handler for the operation
     var ops = {
       addVisitor: function() {
-        if (business.visitors.indexOf(req.user._id) !== -1) {
+        if (-1 !== _.findIndex(business.visitors, function(visitor) {
+            return visitor.username === req.user.username;
+          })
+        ) {
           return res.status(409).json({error: "User already in visitor list"})
         }
-        business.visitors.push(req.user._id);
+        business.visitors.push({
+          name: req.user.name,
+          username: req.user.username,
+          profileImage: req.user.twitter.profile_image_url_https
+        });
         business.visitorsTonight++;
         business.visitorsAllTime++;
       },
       removeVisitor: function() {
-        var index = business.visitors.indexOf(req.user._id);
+        var index = _.findIndex(business.visitors, function(visitor) {
+          return visitor.username === req.user.username
+        });
         if (index === -1) {
           return res.status(409).json({error: "User not in visitor list"})
         }

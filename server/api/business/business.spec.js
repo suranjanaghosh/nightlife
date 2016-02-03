@@ -4,6 +4,7 @@ var should = require('should');
 var app = require('../../app');
 var request = require('supertest');
 var Business = require('./business.model');
+var mockUsers = require('../user/users.mock.js');
 
 var token;
 
@@ -26,10 +27,8 @@ before(function(done) {
   request(app)
     .post('/api/users/')
     .set('Content-Type', 'application/json')
-    .send({
-      email: 'test@test.com',
-      password: 'test'
-    })
+    // Set user from mock data
+    .send(mockUsers('test'))
     .end(function(err, res) {
       res.body.should.have.property('token');
       token = res.body.token;
@@ -309,12 +308,8 @@ describe('DELETE /businesses/', function() {
   before(function (done) {
     request(app)
       .post('/auth/local/')
-      .send({
-        email: 'admin@admin.com',
-        password: 'admin'
-      })
+      .send(mockUsers('admin'))
       .end(function (err, res) {
-        console.log('got admin token');
         adminToken = res.body.token;
         done()
       });

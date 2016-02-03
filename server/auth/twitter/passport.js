@@ -32,7 +32,7 @@ exports.setup = function (User, config) {
           });
           user.save(function(err) {
             if (err) return done(err);
-            req.user = user
+            req.user = user;
             done(err, user);
           });
         } else {
