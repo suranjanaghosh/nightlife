@@ -23,7 +23,6 @@ function isAuthenticated() {
       else if (!req.headers.authorization) {
         req.headers.authorization = 'Bearer ' + req.cookies.jwtToken;
       }
-      console.log(req.headers, req.cookies);
       validateJwt(req, res, next);
     })
     // Attach user to request

@@ -34,7 +34,11 @@
       "yelpId": "dichotomy-coffee-and-spirits-waco-2",
       "visitorsAllTime": 20,
       "visitorsTonight": 3,
-      "visitors": ["sampleUser1", "sampleUser2", "sampleUser3"]
+      "visitors": [
+        {"username": "sampleUser1", "name": "Sample User 1", "profile_img_https": "https://myimage.com/img"},
+        {"username": "sampleUser2", "name": "Sample User 2", "profile_img_https": "https://myimage.com/img"},
+        {"username": "sampleUser3", "name": "Sample user 3", "profile_img_https": "https://myimage.com/img"}
+      ]
     }
   }, {
     "is_claimed": true,
@@ -68,7 +72,7 @@
       "yelpId": "the-dancing-bear-pub-waco",
       "visitorsAllTime": 1,
       "visitorsTonight": 1,
-      "visitors": ["dancingBearPatron"]
+      "visitors": [{"username": "dancingBearPatron", "name": "Dancing Bear Patron", "profile_img_https": "https://myimage.com/img"}]
     }
   }, {
     "is_claimed": true,
