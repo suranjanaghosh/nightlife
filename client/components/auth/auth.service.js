@@ -3,7 +3,7 @@
 angular.module('nightlifeApp')
   .factory('Auth', function Auth($location, $rootScope, $http, User, $q, $cookies) {
     var currentUser = {};
-    if($cookies.get('jwtToken')) {
+    if($cookies.get('token')) {
       currentUser = User.get();
     }
 
@@ -25,7 +25,7 @@ angular.module('nightlifeApp')
           password: user.password
         }).
         success(function(data) {
-          $cookies.put('jwtToken', data.token);
+          $cookies.put('token', data.token);
           currentUser = User.get();
           deferred.resolve(data);
           return cb();
@@ -45,7 +45,7 @@ angular.module('nightlifeApp')
        * @param  {Function}
        */
       logout: function() {
-        $cookies.remove('jwtToken');
+        $cookies.remove('token');
         currentUser = {};
       },
 
@@ -61,7 +61,7 @@ angular.module('nightlifeApp')
 
         return User.save(user,
           function(data) {
-            $cookies.put('jwtToken', data.token);
+            $cookies.put('token', data.token);
             currentUser = User.get();
             return cb(user);
           },
@@ -128,6 +128,7 @@ angular.module('nightlifeApp')
       },
 
       /**
+       *
        * Check if a user is an admin
        *
        * @return {Boolean}
@@ -140,7 +141,7 @@ angular.module('nightlifeApp')
        * Get auth token
        */
       getToken: function() {
-        return $cookies.get('jwtToken');
+        return $cookies.get('token');
       }
     };
   });

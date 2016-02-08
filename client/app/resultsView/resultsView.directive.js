@@ -2,21 +2,23 @@
 
 angular.module('nightlifeApp')
 
-  .controller('ResultsController', function($scope, $document, $http, Auth, resultsService, errorService) {
+  .controller('ResultsController', function($scope, $document, $http, $window, Auth, resultsService, errorService) {
     $scope.results = resultsService.getResults();
     $scope.$on('results:updated', function () {
       $scope.results = resultsService.getResults();
     });
     $scope.toggleVisitor = function(businessIndex) {
-      if(!Auth.getCurrentUser()) {
-        // TODO Redirect to twitter login
+
+      if(!Auth.getCurrentUser().hasOwnProperty('username')) {
       }
 
       var business = $scope.results.businesses[businessIndex];
-      // Get business immutable id for assertion later
+      // Set immutable id for assertion later
       var businessId = business.id;
       // Get bool of users RSVP status
-      var isGoing = _.find(business.visitorData.visitors, ['username', Auth.getCurrentUser().username]);
+      var isGoing = _.find(business.visitorData.visitors, function(user) {
+        return user.username === Auth.getCurrentUser().username;
+      });
       $http.patch('/api/businesses/' + businessId, {
           // Operation to send depends on user's status
           op: (isGoing ? 'removeVisitor': 'addVisitor'),

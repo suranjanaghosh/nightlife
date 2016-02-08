@@ -22,7 +22,7 @@ describe('Directive: resultsView', function () {
   beforeEach(module('nightlifeApp'));
 
   beforeEach(inject(function($injector) {
-    // inject dependecies and mocks
+    // inject dependencies and mocks
     $rootScope = $injector.get('$rootScope');
     $controller = $injector.get('$controller');
     $httpBackend = $injector.get('$httpBackend');

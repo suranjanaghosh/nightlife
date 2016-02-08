@@ -20,9 +20,6 @@ function isAuthenticated() {
       if(req.query && req.query.hasOwnProperty('access_token')) {
         req.headers.authorization = 'Bearer ' + req.query.access_token;
       }
-      else if (!req.headers.authorization) {
-        req.headers.authorization = 'Bearer ' + req.cookies.jwtToken;
-      }
       validateJwt(req, res, next);
     })
     // Attach user to request

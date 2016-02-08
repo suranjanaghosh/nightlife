@@ -18,23 +18,26 @@ angular.module('nightlifeApp', [
     $httpProvider.interceptors.push('authInterceptor');
   })
 
-  .factory('authInterceptor', function ($rootScope, $q, $cookieStore, $location) {
+  .factory('authInterceptor', function ($window, $rootScope, $q, $cookieStore, $location) {
     return {
       // Add authorization token to headers
       request: function (config) {
         config.headers = config.headers || {};
-        if ($cookieStore.get('token')) {
-          config.headers.Authorization = 'Bearer ' + $cookieStore.get('token');
+        if ($cookieStore.get('jwtToken')) {
+          config.headers.Authorization = 'Bearer ' + $cookieStore.get('jwtToken');
         }
         return config;
       },
 
       // Intercept 401s and redirect you to login
       responseError: function(response) {
+        if (response.status === 401) {
+          $location.path('/auth/twitter')
+        }
         if(response.status === 401) {
           $location.path('/login');
           // remove any stale tokens
-          $cookieStore.remove('token');
+          $cookieStore.remove('jwtToken');
           return $q.reject(response);
         }
         else {
