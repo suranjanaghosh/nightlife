@@ -2,15 +2,12 @@
 
 angular.module('nightlifeApp')
 
-  .controller('ResultsController', function($scope, $document, $http, $window, Auth, resultsService, errorService) {
+  .controller('ResultsController', function($scope, $document, $http, Auth, resultsService, errorService) {
     $scope.results = resultsService.getResults();
     $scope.$on('results:updated', function () {
       $scope.results = resultsService.getResults();
     });
     $scope.toggleVisitor = function(businessIndex) {
-
-      if(!Auth.getCurrentUser().hasOwnProperty('username')) {
-      }
 
       var business = $scope.results.businesses[businessIndex];
       // Set immutable id for assertion later

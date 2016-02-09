@@ -67,10 +67,6 @@ describe('Directive: resultsView', function () {
 
     describe('#toggleVisitor', function() {
 
-      it('should redirect on unauthenticated RSVP attempt', function() {
-
-      });
-
       it('should send PATCH request with addVisitor op on authenticated RSVP', function() {
         user = getMockUser('test');
         AuthMock.setMockUser(user);
