@@ -32,9 +32,9 @@ angular.module('nightlifeApp', [
       // Intercept 401s and redirect you to login
       responseError: function(response) {
         if(response.status === 401) {
-          $location.path('/login');
-          // remove any stale tokens
+          $cookieStore.remove('jwtToken');
           $cookieStore.remove('token');
+          window.location.href('/auth/token');
           return $q.reject(response);
         }
         else {
