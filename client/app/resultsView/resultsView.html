@@ -1,19 +1,35 @@
 <!--Business list -->
 <div id="item-list" style="max-width: 95%">
   <ul>
-    <li ng-repeat="business in results.businesses track by $index" class="container business">
+    <li ng-repeat="business in results.businesses" class="container business">
       <div class="col-xs-3 col-sm-2">
         <div class="icon"><img class="img-responsive img-thumbnail center-block" src="{{ business.image_url }}"></div>
         <button class="btn btn-success going-button" ng-click="toggleVisitor($index)">I'm Going!</button>
       </div>
       <div class="col-xs-9">
         <a href="{{ business.url }}"><h2> {{ business.name }} </h2></a>
-        <div ng-show="business.visitorData.visitors.length > 0">
-          <span ng-repeat="visitor in business.visitorData.visitors" class="visitor">{{ visitor }}</span>
-        </div>
-        <div ng-show="business.visitorData.visitors.length === 0">
+        <!-- Visitors list templates -->
+        <!-- Show if there are some visitors -->
+        <span ng-show="business.visitorData.visitors.length > 0">
+          <span ng-repeat="visitor in business.visitorData.visitors | limitTo: 3" class="visitor">
+            <a href="https://twitter.com/{{ visitor.username }}">@{{ visitor.username }}</a>
+          </span>
+        </span>
+        <!--Also show if more than 3 visitors-->
+        <span ng-show="business.visitorData.visitors.length > 3">
+          <span>...and <a>{{business.visitorData.visitors.length - 3}} others</a></span>
+        </span>
+        <span ng-show="business.visitorData.visitors.length > 1">
+          are going.
+        </span>
+        <span ng-show="business.visitorData.visitors.length === 1">
+          is going.
+        </span>
+        <!-- No Visitors -->
+        <span ng-show="business.visitorData.visitors.length === 0">
           No one has RSVP'd yet. You can start the trend!
-        </div>
+        </span>
+
         <div class="detail">
           <span id="snippet"> {{ business.snippet_text }} </span><br/>
         </div>

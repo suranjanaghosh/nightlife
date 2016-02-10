@@ -61,10 +61,6 @@ describe('Directive: resultsView', function () {
       expect($rootScope.results).toEqual(resultsService.getResults());
     });
 
-    it('should render the list of visitors for each business', function() {
-
-    });
-
     describe('#toggleVisitor', function() {
 
       it('should send PATCH request with addVisitor op on authenticated RSVP', function() {
@@ -134,6 +130,12 @@ describe('Directive: resultsView', function () {
         $httpBackend.flush();
         expect(_.findIndex(scopeBusiness.visitorData.visitors, ['username', user.username])).toBe(-1);
       });
+
+    });
+
+    describe('#renderVisitorText', function() {
+
+      it('should ')
 
     });
   })

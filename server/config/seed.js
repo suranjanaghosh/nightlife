@@ -6,6 +6,12 @@
 'use strict';
 
 var User = require('../api/user/user.model');
+var Business = require('../api/business/business.model');
+var seedData = require('../../client/app/mocks/businessData.mock.json');
+
+var seedBusinesses = seedData.businesses.map(function(business) {
+  return business.visitorData;
+});
 
 User.find({}).remove(function() {
   User.create({
@@ -27,3 +33,14 @@ User.find({}).remove(function() {
     }
   );
 });
+
+Business.find().remove()
+  .then(function() {
+  return Business.create(seedBusinesses);
+})
+  .then(function() {
+    console.log('successfully seeded businesses')
+  })
+  .catch(function(err) {
+    console.log('error seeding businesses:', err);
+  });

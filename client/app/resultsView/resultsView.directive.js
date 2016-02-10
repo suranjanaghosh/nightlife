@@ -2,11 +2,16 @@
 
 angular.module('nightlifeApp')
 
-  .controller('ResultsController', function($scope, $document, $http, Auth, resultsService, errorService) {
+  .controller('ResultsController', function($scope, $document, $http, $location, Auth, resultsService, errorService) {
     $scope.results = resultsService.getResults();
     $scope.$on('results:updated', function () {
       $scope.results = resultsService.getResults();
     });
+
+    $scope.renderVisitorText = function(businessIndex) {
+
+    };
+
     $scope.toggleVisitor = function(businessIndex) {
 
       var business = $scope.results.businesses[businessIndex];

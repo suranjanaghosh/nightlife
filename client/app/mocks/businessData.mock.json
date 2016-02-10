@@ -166,7 +166,14 @@
       "yelpId": "georges-restaurant-and-catering-waco",
       "visitorsAllTime": 0,
       "visitorsTonight": 0,
-      "visitors": []
+      "visitors": [
+        {"username": "sampleUser1", "name": "Sample User 1", "profile_img_https": "https://myimage.com/img"},
+        {"username": "sampleUser2", "name": "Sample User 2", "profile_img_https": "https://myimage.com/img"},
+        {"username": "sampleUser3", "name": "Sample user 3", "profile_img_https": "https://myimage.com/img"},
+        {"username": "sampleUser4", "name": "Sample user 4", "profile_img_https": "https://myimage.com/img"},
+        {"username": "sampleUser5", "name": "Sample user 5", "profile_img_https": "https://myimage.com/img"},
+        {"username": "sampleUser6", "name": "Sample user 6", "profile_img_https": "https://myimage.com/img"}
+      ]
     }
   }, {
     "is_claimed": true,
