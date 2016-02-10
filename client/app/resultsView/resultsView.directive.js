@@ -8,15 +8,14 @@ angular.module('nightlifeApp')
       $scope.results = resultsService.getResults();
     });
     $scope.toggleVisitor = function(businessIndex) {
-      if(!Auth.getCurrentUser()) {
-        // TODO Redirect to twitter login
-      }
 
       var business = $scope.results.businesses[businessIndex];
-      // Get business immutable id for assertion later
+      // Set immutable id for assertion later
       var businessId = business.id;
       // Get bool of users RSVP status
-      var isGoing = (business.visitorData.visitors.indexOf(Auth.getCurrentUser().twitterId) !== -1);
+      var isGoing = _.find(business.visitorData.visitors, function(user) {
+        return user.username === Auth.getCurrentUser().username;
+      });
       $http.patch('/api/businesses/' + businessId, {
           // Operation to send depends on user's status
           op: (isGoing ? 'removeVisitor': 'addVisitor'),

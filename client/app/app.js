@@ -23,8 +23,8 @@ angular.module('nightlifeApp', [
       // Add authorization token to headers
       request: function (config) {
         config.headers = config.headers || {};
-        if ($cookieStore.get('token')) {
-          config.headers.Authorization = 'Bearer ' + $cookieStore.get('token');
+        if ($cookieStore.get('jwtToken')) {
+          config.headers.Authorization = 'Bearer ' + $cookieStore.get('jwtToken');
         }
         return config;
       },
@@ -32,9 +32,10 @@ angular.module('nightlifeApp', [
       // Intercept 401s and redirect you to login
       responseError: function(response) {
         if(response.status === 401) {
-          $cookieStore.remove('jwtToken');
+          // remove any stale tokens
           $cookieStore.remove('token');
-          window.location.href('/auth/token');
+          $cookieStore.remove('jwtToken');
+          window.location.href = "/auth/twitter";
           return $q.reject(response);
         }
         else {
