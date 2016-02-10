@@ -63,7 +63,6 @@ exports.revise = function(req, res) {
 exports.update = function(req, res) {
   Business.findOne({ yelpId: req.params.id }, function(err, business) {
     if (err) { return handleError(res, err); }
-    if (!business) { return res.status(404).send('Not Found'); }
     // Operations object with keys being operation and values the handler for the operation
     var ops = {
       addVisitor: function() {
@@ -97,6 +96,13 @@ exports.update = function(req, res) {
     // Handle the operation
     if (!ops.hasOwnProperty(req.body.op)) {
       return res.status(400).send('Invalid Operation')
+    }
+    if (!business) {
+      business = new Business({
+        yelpId: req.params.id,
+        visitorsTonight: 0,
+        visitorsAllTime: 0
+      })
     }
     ops[req.body.op]();
     business.save().then(function(updatedBusiness) {

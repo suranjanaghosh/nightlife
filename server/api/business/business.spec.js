@@ -265,6 +265,21 @@ describe('PATCH /api/businesses/', function() {
       });
   });
 
+  it('should add a new business if it doesn\'t exist', function(done) {
+    request(app)
+      .patch('/api/businesses/unsaved-business')
+      .set('Authorization', 'Bearer ' + token)
+      .send({
+        op: 'addVisitor',
+        path: '/api/businesses/unsaved-business'
+      })
+      .expect(200)
+      .end(function (err) {
+        if (err) return done(err);
+        done();
+      });
+  });
+
   it('should remove a visitor and decrement visitorsTonight and visitorsAllTime', function(done) {
     request(app)
       .patch('/api/businesses/test-business')
