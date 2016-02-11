@@ -132,11 +132,5 @@ describe('Directive: resultsView', function () {
       });
 
     });
-
-    describe('#renderVisitorText', function() {
-
-      it('should ')
-
-    });
   })
 });

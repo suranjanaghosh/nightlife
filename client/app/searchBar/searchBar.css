@@ -10,5 +10,15 @@
 @media (max-width: 768px) {
   #search-bar {
     padding-left: 0;
+    width: 90%;
+    display: block
   }
+  #search-button {
+    display: block;
+    margin: 10px 0 0 0;
+  }
+}
+
+@media (max-width: 494px) {
+
 }

@@ -1,12 +1,13 @@
 <!--Business list -->
 <div id="item-list" style="max-width: 95%">
   <ul>
-    <li ng-repeat="business in results.businesses" class="container business">
+    <li ng-repeat="business in results.businesses" id="business-container" class="container-fluid business well">
       <div class="col-xs-3 col-sm-2">
         <div class="icon"><img class="img-responsive img-thumbnail center-block" src="{{ business.image_url }}"></div>
-        <button class="btn btn-success going-button" ng-click="toggleVisitor($index)">I'm Going!</button>
+        <button id="going-btn" class="btn btn-success going-button" ng-click="toggleVisitor($index)">I'm Going!</button>
+        <button id="going-btn-sm" class="btn btn-success">Going!</button>
       </div>
-      <div class="col-xs-9">
+      <div id="business-info" class="col-xs-9">
         <a href="{{ business.url }}"><h2> {{ business.name }} </h2></a>
         <!-- Visitors list templates -->
         <!-- Show if there are some visitors -->

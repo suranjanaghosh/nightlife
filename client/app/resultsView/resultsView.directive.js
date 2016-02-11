@@ -8,10 +8,6 @@ angular.module('nightlifeApp')
       $scope.results = resultsService.getResults();
     });
 
-    $scope.renderVisitorText = function(businessIndex) {
-
-    };
-
     $scope.toggleVisitor = function(businessIndex) {
 
       var business = $scope.results.businesses[businessIndex];

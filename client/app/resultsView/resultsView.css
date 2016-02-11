@@ -2,7 +2,6 @@
   padding: 0;
   margin: 20px 0;
   font-family: Arial, sans serif;
-  color: #555;
 }
 
 #item-list ul > li {
@@ -17,15 +16,9 @@
   border-bottom: 1px solid #ddd;
 }
 
-#item-list ul > li:hover {
-  background: #efefef;
-}
-
-
 .expand {
   display: block;
   text-decoration: none;
-  color: #555;
   cursor: pointer;
 }
 
@@ -66,6 +59,10 @@ span {
   width: 100px;
 }
 
+#going-btn-sm {
+  display: none;
+}
+
 @media (max-width: 768px) {
   #item-list {
     float: right;
@@ -77,4 +74,38 @@ span {
     padding-right: 5px
   }
 
+  #snippet {
+    font-size: small;
+  }
+
+  #business-info {
+    padding-right: 0;
+  }
+
+}
+
+@media (max-width: 494px) {
+  .icon {
+    height: 70px;
+    width: 70px;
+  }
+  #going-btn {
+    max-width: 70px;
+    text-align: left;
+    display: none;
+  }
+  #going-btn-sm {
+    width: 70px;
+    margin: 10px 0 0 0;
+    padding: 7px 10px 7px 10px;
+    float: right;
+    display: inline;
+  }
+  #item-list {
+    padding-left: -5px;
+  }
+  .container {
+    padding-left: 0;
+    padding-right: 4px;
+  }
 }
