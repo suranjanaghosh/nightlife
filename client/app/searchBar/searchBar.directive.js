@@ -2,19 +2,27 @@
 
 angular.module('nightlifeApp')
 
-  .controller('SearchController', function ($scope, $http, resultsService, errorService) {
+  .controller('SearchController', function ($scope, $cookies, $http, $location, resultsService, errorService) {
 
-    $scope.error = errorService.getError('searchError');
-    $scope.searchBar = {searchTerm: ''};
-    $scope.$on('errors:updated', function () {
+    $scope.init = function() {
       $scope.error = errorService.getError('searchError');
-    });
+      $scope.$on('errors:updated', function () {
+        $scope.error = errorService.getError('searchError');
+      });
+      $scope.searchBar = {searchTerm: $location.search().location || ''};
+      if($scope.searchBar.searchTerm !== '') {
+        console.log('init call');
+        $scope.submitSearch();
+      }
+    };
 
     $scope.submitSearch = function() {
       var searchTerm = $scope.searchBar.searchTerm;
       if(searchTerm === '') {
         searchTerm = 'Waco, TX';
       }
+      $location.search('location', searchTerm);
+      $cookies.put('next', $location.url());
       var encoded = encodeURIComponent(searchTerm);
 
       $http.get('/api/locations/' + encoded)
@@ -30,6 +38,8 @@ angular.module('nightlifeApp')
           }
         });
     };
+
+    $scope.init();
 
   })
 

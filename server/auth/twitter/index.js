@@ -13,8 +13,10 @@ router
 
   .get('/callback', passport.authenticate('twitter', {
       failureRedirect: '/'
-    }), auth.setTokenCookie, function(req, res) {
-    res.redirect('/')
+    }),
+    auth.setTokenCookie,
+    function(req, res) {
+      res.redirect(req.cookies.next || '/')
   });
 
 module.exports = router;

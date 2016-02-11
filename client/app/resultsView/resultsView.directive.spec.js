@@ -91,8 +91,8 @@ describe('Directive: resultsView', function () {
           );
         $rootScope.toggleVisitor(0);
         $httpBackend.flush();
-        expect(_.findIndex(scopeBusiness.visitorData.visitors, function(o) {
-          return user.username === o.username;
+        expect(_.findIndex(scopeBusiness.visitorData.visitors, function(visitor) {
+          return user.username === visitor.username;
         })).not.toBe(-1);
         expect(scopeBusiness).toEqual(specBusiness.getBusiness());
       });
