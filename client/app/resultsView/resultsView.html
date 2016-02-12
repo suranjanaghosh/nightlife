@@ -3,7 +3,7 @@
   <ul>
     <li ng-repeat="business in results.businesses" id="business-container" class="container-fluid business well">
       <div class="col-xs-3 col-sm-2">
-        <div class="icon"><img class="img-responsive img-thumbnail center-block" src="{{ business.image_url }}"></div>
+        <div class="icon"><img class="img-responsive img-thumbnail center-block" src="{{ business.image_url || 'assets/images/business_180_square.png'}}"></div>
         <button id="going-btn" class="btn btn-success going-button" ng-click="toggleVisitor($index)">I'm Going!</button>
         <button id="going-btn-sm" class="btn btn-success">Going!</button>
       </div>
