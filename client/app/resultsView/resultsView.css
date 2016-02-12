@@ -90,8 +90,6 @@ span {
     width: 70px;
   }
   #going-btn {
-    max-width: 70px;
-    text-align: left;
     display: none;
   }
   #going-btn-sm {
