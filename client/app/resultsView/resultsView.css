@@ -53,13 +53,13 @@ span {
   float: right;
 }
 
-.going-button {
+.going-btn {
   margin: 10px 0 0 0;
   float: right;
   width: 100px;
 }
 
-#going-btn-sm {
+.going-btn-sm {
   display: none;
 }
 
@@ -84,15 +84,15 @@ span {
 
 }
 
-@media (max-width: 494px) {
+@media (max-width: 470px) {
   .icon {
     height: 70px;
     width: 70px;
   }
-  #going-btn {
+  .going-btn {
     display: none;
   }
-  #going-btn-sm {
+  .going-btn-sm {
     width: 70px;
     margin: 10px 0 0 0;
     padding: 7px 10px 7px 10px;

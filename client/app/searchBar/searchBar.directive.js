@@ -11,7 +11,6 @@ angular.module('nightlifeApp')
       });
       $scope.searchBar = {searchTerm: $location.search().location || ''};
       if($scope.searchBar.searchTerm !== '') {
-        console.log('init call');
         $scope.submitSearch();
       }
     };

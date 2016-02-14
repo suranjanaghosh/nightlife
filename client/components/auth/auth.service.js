@@ -3,7 +3,7 @@
 angular.module('nightlifeApp')
   .factory('Auth', function Auth($location, $rootScope, $http, User, $q, $cookies) {
     var currentUser = {};
-    if($cookies.get('token')) {
+    if($cookies.get('jwtToken')) {
       currentUser = User.get();
     }
 

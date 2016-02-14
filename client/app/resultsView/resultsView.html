@@ -4,8 +4,8 @@
     <li ng-repeat="business in results.businesses" id="business-container" class="container-fluid business well">
       <div class="col-xs-3 col-sm-2">
         <div class="icon"><img class="img-responsive img-thumbnail center-block" src="{{ business.image_url || 'assets/images/business_180_square.png'}}"></div>
-        <button id="going-btn" class="btn btn-success going-button" ng-click="toggleVisitor($index)">I'm Going!</button>
-        <button id="going-btn-sm" class="btn btn-success">Going!</button>
+        <button class="btn going-btn" ng-class="{'btn-success': !rsvpStatus($index), 'btn-danger': rsvpStatus($index)}" ng-click="toggleVisitor($index)">{{ getText($index) }}</button>
+        <button class="btn going-btn-sm" ng-class="{'btn-success': !rsvpStatus($index), 'btn-danger': rsvpStatus($index)}" ng-click="toggleVisitor($index)">{{ getTextSmall($index) }}</button>
       </div>
       <div id="business-info" class="col-xs-9">
         <a href="{{ business.url }}"><h2> {{ business.name }} </h2></a>
