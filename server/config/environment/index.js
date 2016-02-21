@@ -14,8 +14,6 @@ function requiredProcessEnv(name) {
 // ============================================
 
 var config = {};
-console.log(process.env.NODE_ENV);
-console.log(process.env.NODE_ENV === 'production');
 if (process.env.NODE_ENV === 'production') {
   config = require('./production.js').localEnvConfig
 }

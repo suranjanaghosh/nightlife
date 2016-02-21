@@ -25,7 +25,7 @@ module.exports = {
 
   // Set these as environment variables on the production server
   localEnvConfig: {
-    DOMAIN: 'https://vcooley-nightlife.herokuapp.com',
+    DOMAIN: 'http://vcooley-nightlife.herokuapp.com',
     SESSION_SECRET: process.env.SESSION_SECRET,
 
     YELP_CONFIG: {
