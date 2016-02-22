@@ -21,6 +21,25 @@ module.exports = {
             'mongodb://localhost/nightlife'
   },
 
-  seedDB: false
+  seedDB: false,
+
+  // Set these as environment variables on the production server
+  localEnvConfig: {
+    DOMAIN: 'http://vcooley-nightlife.herokuapp.com',
+    SESSION_SECRET: process.env.SESSION_SECRET,
+
+    YELP_CONFIG: {
+      consumer_key: process.env.YELP_CONSUMER_KEY,
+      consumer_secret: process.env.YELP_CONSUMER_SECRET,
+    token: process.env.YELP_TOKEN,
+    token_secret: process.env.YELP_TOKEN_SECRET
+    },
+    TWITTER_CONFIG: {
+      consumerKey: process.env.TWITTER_CONSUMER_KEY,
+      consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+      callbackURL: process.env.TWITTER_CALLBACK_URL
+    }
+  }
+
 
 };

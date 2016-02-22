@@ -13,7 +13,13 @@ function requiredProcessEnv(name) {
 // All configurations will extend these options
 // ============================================
 
-var config = require('../local.env.js');
+var config = {};
+if (process.env.NODE_ENV === 'production') {
+  config = require('./production.js').localEnvConfig
+}
+else {
+  config = require('../local.env.js');
+}
 
 var all = {
   env: process.env.NODE_ENV,
