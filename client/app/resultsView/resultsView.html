@@ -3,7 +3,7 @@
   <ul>
     <li ng-repeat="business in results.businesses" id="business-container" class="container-fluid business well">
       <div class="col-xs-3 col-sm-2">
-        <div class="icon"><img class="img-responsive img-thumbnail center-block" src="{{ business.image_url || 'assets/images/business_180_square.png'}}"></div>
+        <div class="icon"><img class="img-responsive img-thumbnail center-block" src="{{ business.image_url || 'http://s3-media4.fl.yelpcdn.com/assets/srv0/yelp_styleguide/c7a42ec68c3c/assets/img/default_avatars/business_180_square.png'}}"></div>
         <button class="btn going-btn" ng-class="{'btn-success': !rsvpStatus($index), 'btn-danger': rsvpStatus($index)}" ng-click="toggleVisitor($index)">{{ getText($index) }}</button>
         <button class="btn going-btn-sm" ng-class="{'btn-success': !rsvpStatus($index), 'btn-danger': rsvpStatus($index)}" ng-click="toggleVisitor($index)">{{ getTextSmall($index) }}</button>
       </div>
