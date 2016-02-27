@@ -22,24 +22,26 @@ exports.show = function(req, res) {
   // Get businesses from Yelp. Sorted by highest rated.
   yelp.search({ location: req.params.id, category_filter: 'nightlife', sort: 2 }, function(err, yelpResults) {
     if (err) { return res.status(err.statusCode).json(err.data); }
-    yelpResults.businesses.forEach(function(business, i) {
+    var modifiedResults = yelpResults;
+    modifiedResults.businesses = [];
+    yelpResults.businesses.forEach(function(business) {
+      var visitorData = {};
       Business.findOne({ yelpId: business.id }, function(err, dbResult) {
         if (err) { return handleError(res, err); }
         if (dbResult) {
-          business.visitorData = dbResult;
+          visitorData = dbResult;
         }
         else {
           // Get document properties for a new business.
           var defaultData = (new Business({yelpId: business.id})).toObject();
           // Don't return an _id property. This document is not in the DB
           delete defaultData._id;
-          business.visitorData = defaultData;
+          visitorData = defaultData;
         }
-        if (i === yelpResults.businesses.length - 1) {
-          return res.status(200).json(yelpResults);
-        }
-      })
+      });
+      modifiedResults.businesses.push(visitorData);
     });
+    return res.status(200).json(modifiedResults);
   });
 };
 
