@@ -27,6 +27,7 @@ angular.module('nightlifeApp')
       $http.get('/api/locations/' + encoded)
         .then(function successCallback(res) {
           $scope.searchBar.searchTerm = '';
+          console.log('Search directive got data:', res.data);
           resultsService.setResults(res.data);
         }, function errorCallback(res) {
           if (res.status === 404) {

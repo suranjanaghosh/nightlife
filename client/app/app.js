@@ -51,9 +51,11 @@ angular.module('nightlifeApp', [
     var service = {};
     this.results = {};
     service.getResults = function() {
+      console.log('Results Service get call', self.results)
       return self.results;
     };
     service.setResults = function(data) {
+      console.log('Results Service set results to', data);
       self.results = data;
       $rootScope.$broadcast('results:updated', data);
     };
