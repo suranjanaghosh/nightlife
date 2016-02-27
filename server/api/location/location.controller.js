@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
+var async = require('async');
 var Location = require('./location.model');
 var Business = require('../business/business.model');
 var config = require('../../config/environment');
@@ -14,6 +15,25 @@ exports.index = function(req, res) {
   });
 };
 
+function getSavedOrDefaultBusiness(business, callback) {
+  var visitorData = {};
+  Business.findOne({ yelpId: business.id }, function(err, dbResult) {
+    if (err) { callback(err); }
+    if (dbResult) {
+      visitorData = dbResult;
+    }
+    else {
+      // Get document properties for a new business.
+      var defaultData = (new Business({yelpId: business.id})).toObject();
+      // Don't return an _id property. This document is not in the DB
+      delete defaultData._id;
+      visitorData = defaultData;
+    }
+    business.visitorData = visitorData;
+    callback(null, business);
+  });
+}
+
 // Get businesses for a location, add properties to them from businesses endpoint if
 // they have been visited before or placeholder properties otherwise. Then return the
 // modified object including businesses.
@@ -22,26 +42,13 @@ exports.show = function(req, res) {
   // Get businesses from Yelp. Sorted by highest rated.
   yelp.search({ location: req.params.id, category_filter: 'nightlife', sort: 2 }, function(err, yelpResults) {
     if (err) { return res.status(err.statusCode).json(err.data); }
-    var modifiedResults = yelpResults;
-    modifiedResults.businesses = [];
-    yelpResults.businesses.forEach(function(business) {
-      var visitorData = {};
-      Business.findOne({ yelpId: business.id }, function(err, dbResult) {
-        if (err) { return handleError(res, err); }
-        if (dbResult) {
-          visitorData = dbResult;
-        }
-        else {
-          // Get document properties for a new business.
-          var defaultData = (new Business({yelpId: business.id})).toObject();
-          // Don't return an _id property. This document is not in the DB
-          delete defaultData._id;
-          visitorData = defaultData;
-        }
-      });
-      modifiedResults.businesses.push(visitorData);
+    async.map(yelpResults.businesses, getSavedOrDefaultBusiness, function(err, results) {
+      if (err) {
+        return handleError(res, err);
+      }
+      yelpResults.businesses = results;
+      return res.status(200).json(yelpResults);
     });
-    return res.status(200).json(modifiedResults);
   });
 };
 

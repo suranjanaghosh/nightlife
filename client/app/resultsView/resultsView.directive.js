@@ -13,7 +13,7 @@ angular.module('nightlifeApp')
     $scope.rsvpStatus = function (businessIndex) {
       // Returns the user's RSVP status for a business
       var business = $scope.results.businesses[businessIndex];
-      var isGoing= _.find(business.visitorData.visitors, function(user) {
+      var isGoing = _.find(business.visitorData.visitors, function(user) {
         return user.username === Auth.getCurrentUser().username;
       });
       return isGoing ? true: false;
