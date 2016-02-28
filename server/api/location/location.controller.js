@@ -18,7 +18,7 @@ exports.index = function(req, res) {
 function getSavedOrDefaultBusiness(business, callback) {
   var visitorData = {};
   Business.findOne({ yelpId: business.id }, function(err, dbResult) {
-    if (err) { callback(err); }
+    if (err) { return callback(err); }
     if (dbResult) {
       visitorData = dbResult;
     }
@@ -30,7 +30,7 @@ function getSavedOrDefaultBusiness(business, callback) {
       visitorData = defaultData;
     }
     business.visitorData = visitorData;
-    callback(null, business);
+    return callback(null, business);
   });
 }
 
@@ -40,16 +40,19 @@ function getSavedOrDefaultBusiness(business, callback) {
 exports.show = function(req, res) {
   var yelp = new Yelp(config.yelpConfig);
   // Get businesses from Yelp. Sorted by highest rated.
-  yelp.search({ location: req.params.id, category_filter: 'nightlife', sort: 2 }, function(err, yelpResults) {
-    if (err) { return res.status(err.statusCode).json(err.data); }
-    async.map(yelpResults.businesses, getSavedOrDefaultBusiness, function(err, results) {
-      if (err) {
-        return handleError(res, err);
-      }
-      yelpResults.businesses = results;
-      return res.status(200).json(yelpResults);
+  yelp.search({ location: req.params.id, category_filter: 'nightlife', sort: 2 })
+    .then(function(yelpResults) {
+      async.map(yelpResults.businesses, getSavedOrDefaultBusiness, function(err, results) {
+        if (err) {
+          return handleError(res, err);
+        }
+        yelpResults.businesses = results;
+        return res.status(200).json(yelpResults);
+      })
+    })
+    .catch(function(err){
+      return res.status(err.statusCode).json(err.data);
     });
-  });
 };
 
 // Creates a new location in the DB.

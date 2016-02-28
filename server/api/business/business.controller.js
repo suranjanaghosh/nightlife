@@ -5,9 +5,9 @@ var Business = require('./business.model');
 
 // Get list of businesss
 exports.index = function(req, res) {
-  Business.find(function (err, businesss) {
+  Business.find(function (err, business) {
     if(err) { return handleError(res, err); }
-    return res.status(200).json(businesss);
+    return res.status(200).json(business);
   });
 };
 
@@ -52,7 +52,7 @@ exports.revise = function(req, res) {
     if (err) { return handleError(res, err); }
     if(!business) { return res.status(404).send('Not Found'); }
     var updated = _.merge(business, req.body);
-    updated.save(function (err) {
+    return updated.save(function (err) {
       if (err) { return handleError(res, err); }
       return res.status(200).json(business);
     });
@@ -66,10 +66,8 @@ exports.update = function(req, res) {
     // Operations object with keys being operation and values the handler for the operation
     var ops = {
       addVisitor: function() {
-        if (-1 !== _.findIndex(business.visitors, function(visitor) {
-            return visitor.username === req.user.username;
-          })
-        ) {
+        var visitorIdx = _.findIndex(business.visitors, {username: req.user.username});
+        if (visitorIdx !== -1) {
           return res.status(409).json({error: "User already in visitor list"})
         }
         business.visitors.push({
@@ -81,13 +79,11 @@ exports.update = function(req, res) {
         business.visitorsAllTime++;
       },
       removeVisitor: function() {
-        var index = _.findIndex(business.visitors, function(visitor) {
-          return visitor.username === req.user.username
-        });
-        if (index === -1) {
+        var visitorIdx = _.findIndex(business.visitors, {username: req.user.username});
+        if (visitorIdx === -1) {
           return res.status(409).json({error: "User not in visitor list"})
         }
-        business.visitors.splice(index, 1);
+        business.visitors.splice(visitorIdx, 1);
         business.visitorsTonight --;
         business.visitorsAllTime --;
       }
