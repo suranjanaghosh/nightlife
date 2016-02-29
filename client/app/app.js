@@ -5,7 +5,6 @@ angular.module('nightlifeApp', [
   'ngResource',
   'ngSanitize',
   'ngRoute',
-  'btford.socket-io',
   'ui.bootstrap'
 ])
   .config(function ($routeProvider, $locationProvider, $httpProvider) {
