@@ -59,40 +59,47 @@ exports.revise = function(req, res) {
   });
 };
 
+var handleOperation = function(req, business) {
+  // Operations object with keys being operation and values the handler for the operation
+  var ops = {
+    addVisitor: function(business) {
+      var visitorIdx = _.findIndex(business.visitors, {username: req.user.username});
+      if (visitorIdx !== -1) {
+        return {error: 'Conflict', status: 409, message: 'User already in visitor list'};
+      }
+      business.visitors.push({
+        name: req.user.name,
+        username: req.user.username,
+        profileImage: req.user.twitter.profile_image_url_https
+      });
+      business.visitorsTonight++;
+      business.visitorsAllTime++;
+      return business;
+    },
+    removeVisitor: function(business) {
+      var visitorIdx = _.findIndex(business.visitors, {username: req.user.username});
+      if (visitorIdx === -1) {
+        return {error: 'Conflict', status: 409, message: 'User not in visitor list'};
+      }
+      business.visitors.splice(visitorIdx, 1);
+      business.visitorsTonight --;
+      business.visitorsAllTime --;
+      return business;
+    }
+  };
+
+  // Handle the operation
+  if (!ops.hasOwnProperty(req.body.op)) {
+    return {error: 'Bad Request', status: 400, message: 'Invalid Operation'};
+  }
+
+  return ops[req.body.op](business);
+};
+
 // Handles adding and removing RSVPs for visitors to a business.
 exports.update = function(req, res) {
   Business.findOne({ yelpId: req.params.id }, function(err, business) {
     if (err) { return handleError(res, err); }
-    // Operations object with keys being operation and values the handler for the operation
-    var ops = {
-      addVisitor: function() {
-        var visitorIdx = _.findIndex(business.visitors, {username: req.user.username});
-        if (visitorIdx !== -1) {
-          return res.status(409).json({error: "User already in visitor list"})
-        }
-        business.visitors.push({
-          name: req.user.name,
-          username: req.user.username,
-          profileImage: req.user.twitter.profile_image_url_https
-        });
-        business.visitorsTonight++;
-        business.visitorsAllTime++;
-      },
-      removeVisitor: function() {
-        var visitorIdx = _.findIndex(business.visitors, {username: req.user.username});
-        if (visitorIdx === -1) {
-          return res.status(409).json({error: "User not in visitor list"})
-        }
-        business.visitors.splice(visitorIdx, 1);
-        business.visitorsTonight --;
-        business.visitorsAllTime --;
-      }
-    };
-
-    // Handle the operation
-    if (!ops.hasOwnProperty(req.body.op)) {
-      return res.status(400).send('Invalid Operation')
-    }
     if (!business) {
       business = new Business({
         yelpId: req.params.id,
@@ -100,10 +107,14 @@ exports.update = function(req, res) {
         visitorsAllTime: 0
       })
     }
-    ops[req.body.op]();
-    business.save().then(function(updatedBusiness) {
-      return res.status(200).json(updatedBusiness)
-    });
+    var businessOrError = handleOperation(req, business);
+    if (businessOrError.hasOwnProperty('error')) {
+      return res.status(businessOrError.status).send(businessOrError.message);
+    }
+    return business.save()
+      .then(function(updatedBusiness) {
+        return res.status(200).json(updatedBusiness)
+      });
   })
 };
 
