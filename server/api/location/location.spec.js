@@ -91,9 +91,6 @@ describe('GET /api/locations', function() {
             })
         })
     });
-
-    // TODO Create seed data for business endpoint
-    // TODO Test business and location interaction
   })
 
 });

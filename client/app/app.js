@@ -44,22 +44,6 @@ angular.module('nightlifeApp', [
     };
   })
 
-  // Service for search results
-  .service('resultsService', function($rootScope) {
-    var self = this;
-    var service = {};
-    this.results = {};
-    service.getResults = function() {
-      return self.results;
-    };
-    service.setResults = function(data) {
-      self.results = data;
-      $rootScope.$broadcast('results:updated', data);
-    };
-
-    return service;
-  })
-
   // Error handling service
   .service('errorService', function($rootScope) {
     var errors = {};
@@ -82,6 +66,45 @@ angular.module('nightlifeApp', [
         return errors;
       }
     }
+  })
+
+  // Service for search results
+  .service('resultsService', function($cookies, $http, $location, $rootScope, errorService) {
+    var self = this;
+    var service = {};
+    this.results = {};
+
+    // Results getter and setter for testing
+    service.getResults = function() {
+      return self.results;
+    };
+    service.setResults = function(data) {
+      self.results = data;
+      $rootScope.$broadcast('results:updated', data);
+    };
+
+    service.fetchResults = function(searchTerm) {
+      if(searchTerm === '') {
+        searchTerm = 'Waco, TX';
+      }
+      var encoded = encodeURIComponent(searchTerm);
+      $location.search('location', encoded);
+      $cookies.put('next', $location.url());
+      return $http.get('/api/locations/' + encoded)
+        .then(function successCallback(res) {
+          self.results = res.data;
+          $rootScope.$broadcast('results:updated', self.results);
+        }, function errorCallback(res) {
+          if (res.status === 404) {
+            errorService.setError('searchError', 'That location was not found.');
+          }
+          else {
+            errorService.setError('searchError', 'There was an error searching for that location.');
+          }
+        });
+    };
+
+    return service;
   })
 
   .run(function ($rootScope, $location, Auth) {

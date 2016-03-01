@@ -16,25 +16,7 @@ angular.module('nightlifeApp')
     };
 
     $scope.submitSearch = function() {
-      var searchTerm = $scope.searchBar.searchTerm;
-      if(searchTerm === '') {
-        searchTerm = 'Waco, TX';
-      }
-      $location.search('location', searchTerm);
-      $cookies.put('next', $location.url());
-      var encoded = encodeURIComponent(searchTerm);
-
-      $http.get('/api/locations/' + encoded)
-        .then(function successCallback(res) {
-          resultsService.setResults(res.data);
-        }, function errorCallback(res) {
-          if (res.status === 404) {
-            errorService.setError('searchError', 'That location was not found.');
-          }
-          else {
-            errorService.setError('searchError', 'There was an error searching for that location.');
-          }
-        });
+      return resultsService.fetchResults($scope.searchBar.searchTerm);
     };
 
     $scope.init();

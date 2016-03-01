@@ -3,7 +3,7 @@
 var _ = require('lodash');
 var Business = require('./business.model');
 
-// Get list of businesss
+// Get list of business
 exports.index = function(req, res) {
   Business.find(function (err, business) {
     if(err) { return handleError(res, err); }

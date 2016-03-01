@@ -55,15 +55,6 @@ describe('Controller: SearchController', function () {
       $httpBackend.flush();
     });
 
-    it('should reset scope search after successful search', function() {
-      $httpBackend.expectGET(/\/api\/locations\/.+/)
-        .respond(200, 'Found');
-      $rootScope.searchBar.searchTerm = 'Somewhere';
-      $rootScope.submitSearch();
-      $httpBackend.flush();
-      expect($rootScope.searchBar.searchTerm).toBe('');
-    });
-
     it('should set results after successful search', function() {
       sampleResults = {
         someKey: 'someVal',
