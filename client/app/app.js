@@ -87,8 +87,8 @@ angular.module('nightlifeApp', [
       if(searchTerm === '') {
         searchTerm = 'Waco, TX';
       }
+      $location.search('location', searchTerm);
       var encoded = encodeURIComponent(searchTerm);
-      $location.search('location', encoded);
       $cookies.put('next', $location.url());
       return $http.get('/api/locations/' + encoded)
         .then(function successCallback(res) {
