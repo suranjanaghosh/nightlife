@@ -18,7 +18,7 @@ var passport = require('passport');
 var session = require('express-session');
 
 module.exports = function(app) {
-  var env = app.get('env');
+  var env = process.env.NODE_ENV;
 
   app.set('views', config.root + '/server/views');
   app.engine('html', require('ejs').renderFile);
@@ -31,9 +31,9 @@ module.exports = function(app) {
   app.use(session({ secret: config.secrets.session, resave: true, saveUninitialized: true }));
   app.use(passport.initialize());
   if ('production' === env) {
-    app.use(favicon(path.join(config.root, 'client', 'favicon.ico')));
-    app.use(express.static(path.join(config.root, 'client')));
-    app.set('appPath', path.join(config.root, 'client'));
+    app.use(favicon(path.join(config.root, 'public', 'favicon.ico')));
+    app.use(express.static(path.join(config.root, 'public')));
+    app.set('appPath', path.join(config.root, 'public'));
     app.use(morgan('dev'));
   }
 
