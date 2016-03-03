@@ -18,7 +18,7 @@ var passport = require('passport');
 var session = require('express-session');
 
 module.exports = function(app) {
-  var env = app.get('env');
+  var env = process.env.NODE_ENV;
 
   app.set('views', config.root + '/server/views');
   app.engine('html', require('ejs').renderFile);
