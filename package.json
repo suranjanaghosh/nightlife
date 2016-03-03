@@ -81,7 +81,7 @@
     "should": "~3.3.1"
   },
   "engines": {
-    "node": ">=0.10.0"
+    "node": "~5.0.0"
   },
   "scripts": {
     "start": "node server/app.js",
