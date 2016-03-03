@@ -69,7 +69,7 @@ angular.module('nightlifeApp', [
   })
 
   // Service for search results
-  .service('resultsService', function($cookies, $http, $location, $rootScope) {
+  .service('resultsService', function($cookies, $http, $location, $rootScope, Auth) {
     var self = this;
     var service = {};
     this.results = {};
@@ -94,6 +94,35 @@ angular.module('nightlifeApp', [
         .then(function successCallback(res) {
           self.results = res.data;
           $rootScope.$broadcast('results:updated', self.results);
+          return res.data;
+        })
+    };
+
+    service.rsvpStatus = function(business) {
+      console.log(Auth.getCurrentUser().username);
+      // Returns the user's RSVP status for a business
+      var isGoing = _.find(business.visitorData.visitors, function(user) {
+        return user.username === Auth.getCurrentUser().username;
+      });
+      return isGoing ? true: false;
+    };
+
+    // Takes a business and the user's RSVP status
+    service.toggleVisitor = function(business) {
+      // Set immutable id for assertion later
+      var businessId = business.id;
+      var isGoing = service.rsvpStatus(business);
+      return $http.patch('/api/businesses/' + businessId, {
+          // Operation to send depends on user's status
+          op: (isGoing ? 'removeVisitor': 'addVisitor'),
+          path: '/api/businesses/' + business.id
+        })
+        .then(function(res) {
+          // Assert that the business reference is the same as before the request
+          if (businessId !== business.id) {
+            throw Error('Business changed during the request!');
+          }
+          business.visitorData = res.data;
           return res.data;
         })
     };

@@ -21,12 +21,30 @@ describe('Directive: resultsView', function () {
   // load the controller's module
   beforeEach(module('nightlifeApp'));
 
+  beforeEach(function() {
+
+    AuthMock = (function() {
+      var currentUser = {};
+      return {
+        setMockUser: function (user) {
+          currentUser = user;
+        },
+        getCurrentUser: function() {
+          return currentUser;
+        }
+      }
+    })();
+
+    module(function($provide) {
+      $provide.value('Auth', AuthMock);
+    });
+  });
+
   beforeEach(inject(function($injector) {
     // inject dependencies and mocks
     $rootScope = $injector.get('$rootScope');
     $controller = $injector.get('$controller');
     $httpBackend = $injector.get('$httpBackend');
-    AuthMock = $injector.get('AuthMock');
     resultsService = $injector.get('resultsService');
 
     // Read mock data
