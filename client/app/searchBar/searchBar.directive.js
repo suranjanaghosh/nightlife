@@ -28,7 +28,6 @@ angular.module('nightlifeApp')
     };
 
     $scope.init();
-
   })
 
   .directive('searchBar', function () {
