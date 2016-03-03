@@ -3,5 +3,6 @@ node_modules
 .idea
 client/bower_components
 dist
+data
 /**/local.env.js
 npm-debug.log
