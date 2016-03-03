@@ -16,7 +16,15 @@ angular.module('nightlifeApp')
     };
 
     $scope.submitSearch = function() {
-      return resultsService.fetchResults($scope.searchBar.searchTerm);
+      return resultsService.fetchResults($scope.searchBar.searchTerm)
+        .catch(function (res) {
+          if (res.status === 404) {
+            errorService.setError('searchError', 'That location was not found.');
+          }
+          else {
+            errorService.setError('searchError', 'There was an error searching for that location.');
+          }
+        });
     };
 
     $scope.init();

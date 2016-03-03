@@ -94,14 +94,8 @@ angular.module('nightlifeApp', [
         .then(function successCallback(res) {
           self.results = res.data;
           $rootScope.$broadcast('results:updated', self.results);
-        }, function errorCallback(res) {
-          if (res.status === 404) {
-            errorService.setError('searchError', 'That location was not found.');
-          }
-          else {
-            errorService.setError('searchError', 'There was an error searching for that location.');
-          }
-        });
+          return res.data;
+        })
     };
 
     return service;
