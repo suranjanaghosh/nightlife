@@ -99,7 +99,6 @@ angular.module('nightlifeApp', [
     };
 
     service.rsvpStatus = function(business) {
-      console.log(Auth.getCurrentUser().username);
       // Returns the user's RSVP status for a business
       var isGoing = _.find(business.visitorData.visitors, function(user) {
         return user.username === Auth.getCurrentUser().username;

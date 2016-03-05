@@ -2,7 +2,7 @@
 
 angular.module('nightlifeApp')
 
-  .controller('ResultsController', function($scope, $document, $http, $location, Auth, resultsService, errorService) {
+  .controller('ResultsController', function($scope, $document, $http, $location, resultsService, errorService) {
 
     // Get results from service and keep them updated
     $scope.results = resultsService.getResults();
