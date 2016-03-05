@@ -37,10 +37,12 @@ User.find({}).remove(function() {
 Business.find().remove()
   .then(function() {
   return Business.create(seedBusinesses);
-})
-  .then(function() {
-    console.log('successfully seeded businesses')
+  })
+  .then(function(businesses) {
+    console.log('successfully seeded businesses');
+    return businesses;
   })
   .catch(function(err) {
     console.log('error seeding businesses:', err);
+    return err;
   });

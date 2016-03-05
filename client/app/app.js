@@ -60,7 +60,7 @@ angular.module('nightlifeApp', [
         $rootScope.$broadcast('errors:updated', errors);
       },
       getError: function(error) {
-        return errors[error] || ''
+        return errors[error];
       },
       getAllErrors: function() {
         return errors;

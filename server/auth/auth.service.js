@@ -25,8 +25,8 @@ function isAuthenticated() {
     // Attach user to request
     .use(function(req, res, next) {
       User.findById(req.user._id, function (err, user) {
-        if (err) return next(err);
-        if (!user) return res.status(401).send('Unauthorized');
+        if (err) { return next(err); }
+        if (!user) { return res.status(401).send('Unauthorized'); }
         req.user = user;
         next();
       });
@@ -47,7 +47,7 @@ function hasRole(roleRequired) {
         next();
       }
       else {
-        res.status(403).send('Forbidden');
+        return res.status(403).send('Forbidden');
       }
     });
 }
@@ -63,7 +63,9 @@ function signToken(id) {
  * Set token cookie directly for oAuth strategies
  */
 function setTokenCookie(req, res, next) {
-  if (!req.user) return res.status(404).json({ message: 'Something went wrong, please try again.'});
+  if (!req.user) {
+    return res.status(404).json({ message: 'Something went wrong, please try again.'});
+  }
   var token = signToken(req.user._id, req.user.role);
   res.cookie('jwtToken', JSON.stringify(token));
   next();
