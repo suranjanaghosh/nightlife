@@ -1,5 +1,14 @@
+<!-- Loading animation -->
+<div class="sk-folding-cube">
+  <div class="sk-cube1 sk-cube"></div>
+  <div class="sk-cube2 sk-cube"></div>
+  <div class="sk-cube4 sk-cube"></div>
+  <div class="sk-cube3 sk-cube"></div>
+</div>
+
+
 <!--Business list -->
-<div id="item-list" style="max-width: 95%">
+<div id="item-list" class="results-list" style="max-width: 95%">
   <ul>
     <li ng-repeat="business in results.businesses" id="business-container" class="container-fluid business well">
       <div class="col-xs-3 col-sm-2">
@@ -32,7 +41,8 @@
         </span>
 
         <div class="detail">
-          <span id="snippet"> {{ business.snippet_text }} </span><br/>
+          <span id="snippet"> {{ business.snippet_text }} </span>
+          <br/>
         </div>
       </div>
     </li>

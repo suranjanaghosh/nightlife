@@ -4,10 +4,28 @@ angular.module('nightlifeApp')
 
   .controller('ResultsController', function($scope, $document, $http, $location, resultsService, errorService) {
 
-    // Get results from service and keep them updated
-    $scope.results = resultsService.getResults();
-    $scope.$on('results:updated', function () {
-      $scope.results = resultsService.getResults();
+    $scope.results = {};
+
+    $scope.$on('results:updated', function (event, results) {
+      $scope.results = results;
+      console.log(results)
+      // Animations
+      angular.element(".sk-folding-cube").css("display", "none");
+      setTimeout(function() {
+        console.log(angular.element("#item-list ul li"));
+        angular.element("#item-list ul li").each(function(i) {
+          angular.element(this).delay((i + 1) * 200).fadeTo(250, 1);
+        })
+      }, 0);
+    });
+
+    // Clear results from user view and display loading spinner on search
+    $scope.$on('search:start', function() {
+      $scope.results = {};
+      angular.element("#item-list ul li").each(function() {
+        angular.element(this).fadeTo(0, 0);
+      });
+      angular.element(".sk-folding-cube").css("display", "block");
     });
 
     $scope.rsvpStatus = function (businessIndex) {

@@ -80,20 +80,20 @@ angular.module('nightlifeApp', [
     };
     service.setResults = function(data) {
       self.results = data;
-      $rootScope.$broadcast('results:updated', data);
     };
 
     service.fetchResults = function(searchTerm) {
       if(searchTerm === '') {
         searchTerm = 'Waco, TX';
       }
-      $location.search('location', searchTerm);
+      $rootScope.$broadcast('search:start', searchTerm);
       var encoded = encodeURIComponent(searchTerm);
-      $cookies.put('next', $location.url());
       return $http.get('/api/locations/' + encoded)
         .then(function successCallback(res) {
+          $location.search('location', searchTerm);
+          $cookies.put('next', $location.url());
           self.results = res.data;
-          $rootScope.$broadcast('results:updated', self.results);
+          $rootScope.$broadcast('results:updated', res.data);
           return res.data;
         })
     };

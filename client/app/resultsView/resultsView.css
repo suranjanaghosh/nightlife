@@ -10,10 +10,7 @@
   display: block;
   padding: 15px;
   overflow: hidden;
-}
-
-#item-list ul:last-child {
-  border-bottom: 1px solid #ddd;
+  opacity: 0;
 }
 
 .expand {
