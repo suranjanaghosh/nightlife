@@ -10,18 +10,14 @@ angular.module('nightlifeApp')
         $scope.error = errorService.getError('searchError');
       });
       $scope.searchBar = {searchTerm: $location.search().location || ''};
-      if($scope.searchBar.searchTerm !== '') {
-        return $scope.submitSearch();
-      }
+      return $scope.submitSearch();
     };
 
     // Update the location in the address bar. Doing so causes the scope to be
     // reinitialized, which in turn calls $scope.init, which submits a search
     // if $location.search().location is truthy
     $scope.updateLocation = function() {
-      if($scope.searchBar.searchTerm) {
-        $location.search('location', $scope.searchBar.searchTerm);
-      }
+      $location.search('location', $scope.searchBar.searchTerm);
     };
 
     $scope.submitSearch = function() {
