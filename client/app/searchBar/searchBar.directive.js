@@ -5,19 +5,18 @@ angular.module('nightlifeApp')
   .controller('SearchController', function ($scope, $cookies, $http, $location, resultsService, errorService) {
 
     $scope.init = function() {
+      $scope.searchBar = {searchTerm: ''};
       $scope.error = errorService.getError('searchError');
       $scope.$on('errors:updated', function () {
         $scope.error = errorService.getError('searchError');
       });
-      $scope.searchBar = {searchTerm: $location.search().location || ''};
-      return $scope.submitSearch();
-    };
-
-    // Update the location in the address bar. Doing so causes the scope to be
-    // reinitialized, which in turn calls $scope.init, which submits a search
-    // if $location.search().location is truthy
-    $scope.updateLocation = function() {
-      $location.search('location', $scope.searchBar.searchTerm);
+      if ($location.search().location) {
+        $scope.searchBar.searchTerm = $location.search().location;
+      }
+      else {
+        $scope.searchBar.searchTerm = "Waco, TX";
+      }
+      $scope.submitSearch();
     };
 
     $scope.submitSearch = function() {
@@ -30,6 +29,10 @@ angular.module('nightlifeApp')
             errorService.setError('searchError', 'There was an error searching for that location.');
           }
         });
+    };
+
+    $scope.clearSearchTerm = function() {
+      $scope.searchBar.searchTerm = '';
     };
 
     $scope.init();

@@ -2,14 +2,14 @@
 
 angular.module('nightlifeApp')
 
-  .controller('ResultsController', function($scope, $document, $http, $location, resultsService, errorService) {
+  .controller('ResultsController', function($scope, $document, $http, $location, $timeout, resultsService, errorService) {
 
     $scope.results = {};
+
     $scope.$on('results:updated', function (event, results) {
       $scope.results = results;
-      // Animations
       angular.element(".sk-folding-cube").css("display", "none");
-      setTimeout(function() {
+      $timeout(function() {
         angular.element("#item-list ul li").each(function(i) {
           angular.element(this).delay((i + 1) * 200).fadeTo(250, 1);
         })

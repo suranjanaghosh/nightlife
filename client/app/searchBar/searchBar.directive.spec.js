@@ -3,7 +3,7 @@
 
 describe('Controller: SearchController', function () {
   var $controller, $httpBackend, $rootScope,
-      createController, sampleResults, resultsService;
+      controller, sampleResults, resultsService;
 
   // load the controller's module
   beforeEach(module('nightlifeApp'));
@@ -14,31 +14,28 @@ describe('Controller: SearchController', function () {
     $controller = $injector.get('$controller');
     resultsService = $injector.get('resultsService');
 
-    // Used to create controller instance
-    createController = function() {
-      return $controller('SearchController', {'$scope' : $rootScope });
-    };
-
   }));
+
+  beforeEach(function() {
+    // Intercept the default search that is submitted on controller creation.
+    $httpBackend.expectGET(/api\/locations\/.+/)
+      .respond(200, {businesses: ['ok']
+      });
+    controller = $controller('SearchController', {'$scope' : $rootScope });
+    $httpBackend.flush();
+  });
 
   afterEach(function(){
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  it('should initialize scope variables', function() {
-    createController();
-    // TODO expect($rootScope.errors.searchError).toBe('');
-    expect($rootScope.searchBar.searchTerm).toBe('');
-
+  it('should initialize scope variables with default values', function() {
+    expect($rootScope.searchBar.searchTerm).toBe('Waco, TX');
   });
 
   // submitSearch function tests
   describe('Function: $scope.submitSearch', function() {
-    var controller;
-    beforeEach(function() {
-      controller = createController();
-    });
 
     it('should submit a search for default', function() {
       $httpBackend.expectGET('/api/locations/Waco%2C%20TX')

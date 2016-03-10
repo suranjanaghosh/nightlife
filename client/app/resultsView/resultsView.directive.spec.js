@@ -47,14 +47,15 @@ describe('Directive: resultsView', function () {
     $httpBackend = $injector.get('$httpBackend');
     resultsService = $injector.get('resultsService');
 
-    // Read mock data
-    sampleBusinessData = readJSON('client/app/mocks/businessData.mock.json');
-    resultsService.setResults(sampleBusinessData);
-
     // Create controller instance
     controller = (function() {
-      return $controller('ResultsController', {'$scope' : $rootScope, Auth: AuthMock});
+      return $controller('ResultsController', {'$scope' : $rootScope});
     })();
+
+    // Read mock data and set results. This also will result in a broadcast of the results to the
+    // controller as tested in the first test
+    sampleBusinessData = readJSON('client/app/mocks/businessData.mock.json');
+    resultsService.setResults(sampleBusinessData);
 
     // Set up a default business for tests
     scopeBusiness = $rootScope.results.businesses[0];

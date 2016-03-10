@@ -80,6 +80,7 @@ angular.module('nightlifeApp', [
     };
     service.setResults = function(data) {
       self.results = data;
+      $rootScope.$broadcast('results:updated', self.results);
     };
 
     service.fetchResults = function(searchTerm) {
@@ -90,7 +91,6 @@ angular.module('nightlifeApp', [
       var encoded = encodeURIComponent(searchTerm);
       return $http.get('/api/locations/' + encoded)
         .then(function successCallback(res) {
-          $location.search('location', searchTerm);
           $cookies.put('next', $location.url());
           self.results = res.data;
           $rootScope.$broadcast('results:updated', res.data);
