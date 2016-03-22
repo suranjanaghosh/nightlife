@@ -8,9 +8,9 @@ angular.module('nightlifeApp')
 
     $scope.$on('results:updated', function (event, results) {
       $scope.results = results;
-      angular.element(".sk-folding-cube").css("display", "none");
+      angular.element('.sk-folding-cube').css('display', 'none');
       $timeout(function() {
-        angular.element("#item-list ul li").each(function(i) {
+        angular.element('#item-list ul li').each(function(i) {
           angular.element(this).delay((i + 1) * 200).fadeTo(250, 1);
         })
       }, 0);
@@ -19,10 +19,16 @@ angular.module('nightlifeApp')
     // Clear results from user view and display loading spinner on search
     $scope.$on('search:start', function() {
       $scope.results = {};
-      angular.element("#item-list ul li").each(function() {
+      angular.element('#item-list ul li').each(function() {
         angular.element(this).fadeTo(0, 0);
       });
-      angular.element(".sk-folding-cube").css("display", "block");
+      angular.element('.sk-folding-cube').css('display', 'block');
+    });
+
+    $scope.$on('errors:updated', function(errors) {
+      if (errors) {
+        angular.element('.sk-folding-cube').css('display', 'none');
+      }
     });
 
     $scope.rsvpStatus = function (businessIndex) {
@@ -31,11 +37,11 @@ angular.module('nightlifeApp')
     };
 
     $scope.getText = function(businessIndex) {
-      return !$scope.rsvpStatus(businessIndex) ? "I'm going!" : "Back Out.";
+      return !$scope.rsvpStatus(businessIndex) ? 'I\'m going!' : 'Back Out.';
     };
 
     $scope.getTextSmall = function(businessIndex) {
-      return !$scope.rsvpStatus(businessIndex) ? "Going!" : "Nope.";
+      return !$scope.rsvpStatus(businessIndex) ? 'Going!' : 'Nope.';
     };
 
     $scope.toggleVisitor = function(businessIndex) {

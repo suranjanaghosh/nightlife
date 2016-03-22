@@ -1,0 +1,7 @@
+<div class="container-fluid">
+  <ul id="errors-list">
+    <li class="error-message" ng-repeat="(error, message) in errors" ng-click="removeError(error)">{{ message }}
+      <span class="glyphicon glyphicon-remove"></span>
+    </li>
+  </ul>
+</div>

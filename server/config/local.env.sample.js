@@ -5,6 +5,8 @@
 //
 // You will need to set these on the server you deploy to.
 
+var SESSION_SECRET = 'your-session-secret';
+
 var YELP_CONSUMER_KEY = '',
     YELP_CONSUMER_SECRET = '',
     YELP_TOKEN = '',
@@ -16,7 +18,7 @@ var TWITTER_CONSUMER_KEY = '',
 
 module.exports = {
   DOMAIN:           'http://127.0.0.1:9000',
-  SESSION_SECRET:   'nightlife-secret',
+  SESSION_SECRET:   SESSION_SECRET,
 
   // Control debug level for modules using visionmedia/debug
   DEBUG: '',

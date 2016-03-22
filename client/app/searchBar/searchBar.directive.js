@@ -20,6 +20,7 @@ angular.module('nightlifeApp')
     };
 
     $scope.submitSearch = function() {
+      errorService.removeAllErrors();
       return resultsService.fetchResults($scope.searchBar.searchTerm)
         .catch(function (res) {
           if (res.status === 404) {

@@ -53,23 +53,30 @@ angular.module('nightlifeApp', [
       setError: function(error, message) {
         errors[error] = message;
         $rootScope.$broadcast('errors:updated', errors);
-      },
-      // Removes an error. param error should be error name
-      removeError: function(error) {
-        delete errors[error];
-        $rootScope.$broadcast('errors:updated', errors);
+        return errors;
       },
       getError: function(error) {
         return errors[error];
       },
       getAllErrors: function() {
         return errors;
+      },
+      // Removes an error. param error should be error name
+      removeError: function(error) {
+        delete errors[error];
+        $rootScope.$broadcast('errors:updated', errors);
+        return errors
+      },
+      removeAllErrors: function() {
+        errors = {};
+        $rootScope.$broadcast('errors:updated', errors);
+        return errors;
       }
     }
   })
 
   // Service for search results
-  .service('resultsService', function($cookies, $http, $location, $rootScope, Auth) {
+  .service('resultsService', function($cookies, $http, $location, $rootScope, Auth, errorService) {
     var self = this;
     var service = {};
     this.results = {};
@@ -95,7 +102,11 @@ angular.module('nightlifeApp', [
           self.results = res.data;
           $rootScope.$broadcast('results:updated', res.data);
           return res.data;
-        })
+        }, function errorCallback(res) {
+          var message = 'That location was not found or does not exist.';
+          errorService.setError('search', message);
+          return res;
+        });
     };
 
     service.rsvpStatus = function(business) {

@@ -1,0 +1,23 @@
+#errors-list {
+  width: 70%;
+  padding-left: 15%;
+  list-style-type: none;
+}
+
+#errors-list > li {
+  background-color: rgba(222, 52, 52, .9);
+  padding-left: 24px;
+}
+
+.glyphicon {
+  float: right;
+  margin: 3px 10px 0 0;
+}
+
+@media (max-width: 768px) {
+  #errors-list {
+    padding-left: 0;
+    width: 90%;
+    display: block;
+  }
+}

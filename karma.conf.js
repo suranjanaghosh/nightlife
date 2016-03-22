@@ -20,13 +20,10 @@ module.exports = function(config) {
       'client/bower_components/angular-route/angular-route.js',
       'client/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
       'client/bower_components/lodash/dist/lodash.js',
-      'client/bower_components/angular-socket-io/socket.js',
       'client/bower_components/karma-read-json/karma-read-json.js',
       'client/app/app.js',
       'client/app/**/*.js',
-      'client/components/**/*.js',
       'client/app/**/*.html',
-      'client/components/**/*.html',
       'client/app/mocks/**/*.mock.js',
 
       // mock data fixtures
